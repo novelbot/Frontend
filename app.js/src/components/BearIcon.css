@@ -1,0 +1,10 @@
+.bear-icon {
+  position: fixed;
+  bottom: 10px;
+  right: 8px;
+}
+
+.bear-icon img {
+  width: 150px;
+  height: auto;
+}

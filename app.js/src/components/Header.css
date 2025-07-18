@@ -1,0 +1,58 @@
+/* components/Header.css */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #A0C4F2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.menu {
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.login-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-section img {
+  width: 20px;
+  height: 20px;
+}
+
+.login-section .arrow {
+  width: 10px;
+  height: 10px;
+}

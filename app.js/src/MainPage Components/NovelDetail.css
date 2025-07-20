@@ -1,0 +1,17 @@
+.novel-detail-container {
+  display: flex;
+  justify-content: center;
+  width: 1200px;
+  background-color: white;
+  border-radius: 16px;
+  margin-top: 80px;
+}
+
+.novel-detail-left {
+  width: 350px;
+  margin-right: 80px;
+}
+
+.novel-detail-right {
+  flex: 1;
+}

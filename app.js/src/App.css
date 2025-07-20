@@ -1,6 +1,7 @@
 body {
-  margin: 0;
-  padding-top: 55px; /* 헤더 높이만큼 밀어줌 */
+  margin: 0;  
   background-color: white;
   font-family: sans-serif;
+  display: flex;
+  justify-content: center;
 }

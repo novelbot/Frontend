@@ -4,7 +4,7 @@
   background-color: white;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); /* 내부 그림자 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,18 +13,17 @@
 .novel-card-image-wrapper {
   position: relative;
   width: 80%;
-  aspect-ratio: 2 / 3; /* 1:1.5 비율 */
+  aspect-ratio: 2 / 3;  /* 세로가 더 긴 비율 (표지 비율) */
   border-radius: 12px;
-  overflow: hidden;
+  overflow: hidden;     /* 이미지 넘침 방지 */
 }
 
-
-/* ✅ 표지 이미지 */
+/* ✅ 표지 이미지 스타일 */
 .novel-card-foreground {
   position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 원본 비율 유지하면서 잘리지 않도록 */
+  object-fit: cover;     /* 이미지가 꽉 차도록 */
   z-index: 1;
   border-radius: 12px;
 }
@@ -49,10 +48,11 @@
   font-size: 13px;
   line-height: 1.4;
   color: #333;
-  white-space: pre-wrap;
+  white-space: pre-wrap;     /* 줄바꿈, 공백 유지 */
   margin-bottom: 20px;
 }
 
+/* ▶️ 시작/좋아요 버튼 배치 영역 */
 .novel-card-buttons {
   display: flex;
   justify-content: space-between;
@@ -61,6 +61,7 @@
   box-sizing: border-box;
 }
 
+/* "시작하기" 버튼 */
 .start-button {
   flex: 1;
   padding: 10px;
@@ -72,6 +73,7 @@
   cursor: pointer;
 }
 
+/* ❤️ 좋아요 버튼 관련 */
 .like-button {
   background-color: white;
 }

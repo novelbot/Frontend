@@ -3,6 +3,7 @@ import './NovelEpisode.css';
 import downIcon from '../assets/down.png';
 import coverImage from '../assets/25. 먼길 표지.png';
 
+// 더미 에피소드 목록 (썸네일 포함)
 const dummyEpisodes = [
   { id: 25, number: 1, date: '25.01.01', title: '여명의 파도', thumbnail: coverImage },
   { id: 25, number: 2, date: '25.01.08', title: '흔들리는 것들', thumbnail: coverImage },
@@ -22,28 +23,33 @@ const dummyEpisodes = [
 const EPISODES_PER_BATCH = 4;
 
 const NovelEpisode = () => {
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [visibleCount, setVisibleCount] = useState(EPISODES_PER_BATCH);
+  const [sortOrder, setSortOrder] = useState('asc');                  // 정렬 기준: asc 또는 desc
+  const [visibleCount, setVisibleCount] = useState(EPISODES_PER_BATCH); // 현재 보여줄 에피소드 수
 
+  // 정렬된 에피소드 배열 생성
   const sortedEpisodes = [...dummyEpisodes].sort((a, b) =>
     sortOrder === 'asc' ? a.number - b.number : b.number - a.number
   );
 
+  // 화면에 보여줄 에피소드만 추출
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount);
 
+  // 더보기 버튼 클릭 시 에피소드 수 증가
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + EPISODES_PER_BATCH);
   };
 
+  // 정렬 버튼 클릭 시 기준 변경 및 목록 초기화
   const handleSortChange = (order) => {
     setSortOrder(order);
-    setVisibleCount(EPISODES_PER_BATCH); // 정렬 변경 시 초기 4개로 리셋
+    setVisibleCount(EPISODES_PER_BATCH);
   };
 
   return (
     <div className="novel-episode">
-      <h2 className="episode-title">소설 제목</h2>
+      <h2 className="episode-title">먼길</h2>
 
+      {/* 정렬 버튼: 첫화부터 / 최신화부터 */}
       <div className="episode-controls">
         <button
           className={`sort-button ${sortOrder === 'asc' ? 'active' : ''}`}
@@ -59,8 +65,10 @@ const NovelEpisode = () => {
         </button>
       </div>
 
+      {/* 전체 에피소드 수 표시 */}
       <p className="episode-count">전체 {dummyEpisodes.length}</p>
 
+      {/* 에피소드 카드 목록 */}
       <div className="episode-list">
         {visibleEpisodes.map((episode) => (
           <div className="episode-card" key={episode.id + '-' + episode.number}>
@@ -77,6 +85,7 @@ const NovelEpisode = () => {
         ))}
       </div>
 
+      {/* 더보기 버튼: 아직 보여줄 에피소드가 남았을 경우에만 표시 */}
       {visibleCount < dummyEpisodes.length && (
         <div className="load-more-wrapper">
           <button className="load-more" onClick={handleLoadMore}>
@@ -89,3 +98,4 @@ const NovelEpisode = () => {
 };
 
 export default NovelEpisode;
+  

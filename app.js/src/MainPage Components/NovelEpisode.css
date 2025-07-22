@@ -6,6 +6,7 @@
   padding: 16px;
 }
 
+/* 에피소드 섹션 제목 */
 .episode-title {
   color: black;
   font-size: 20px;
@@ -14,12 +15,14 @@
   margin-bottom: 10px;
 }
 
+/* 정렬 버튼 영역 */
 .episode-controls {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
 }
 
+/* 정렬 버튼 기본 스타일 */
 .sort-button {
   width: 180px;
   padding: 8px 16px;
@@ -30,12 +33,14 @@
   cursor: pointer;
 }
 
+/* 정렬 버튼 활성화 상태 */
 .sort-button.active {
   background-color: #222;
   color: white;
   font-weight: bold;
 }
 
+/* 에피소드 개수 텍스트 */
 .episode-count {
   font-size: 14px;
   font-weight: 500;
@@ -43,12 +48,14 @@
   color: black;
 }
 
+/* 에피소드 카드 리스트 */
 .episode-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* 개별 에피소드 카드 레이아웃 */
 .episode-card {
   background-color: #e7f0fd;
   border-radius: 12px;
@@ -58,6 +65,7 @@
   justify-content: space-between;
 }
 
+/* 썸네일 이미지 */
 .episode-card img {
   width: 60px;
   height: 90px;
@@ -65,30 +73,35 @@
   object-fit: cover;
 }
 
+/* 썸네일 오른쪽 정보 영역 */
 .episode-info {
   flex: 1;
   margin-left: 12px;
 }
 
+/* 날짜 표시 */
 .episode-date {
   font-size: 12px;
   color: #666;
   margin-bottom: 4px;
 }
 
+/* 에피소드 제목 텍스트 */
 .episode-title-text {
   font-size: 14px;
   font-weight: bold;
   color: #000000;
 }
 
+/* 오른쪽 메타 정보 (예: 무료 뱃지) */
 .episode-meta {
   display: flex;
-  flex-direction: column; /* 수직 정렬 */
-  align-items: center;   /* 오른쪽 정렬 유지 */
+  flex-direction: column;
+  align-items: center;
   color: black;
 }
 
+/* 무료 뱃지 */
 .free-badge {
   border: 1px solid #000;
   color: #222222;
@@ -99,18 +112,22 @@
   cursor: pointer;
 }
 
+/* '더보기' 버튼 감싸는 영역 */
 .load-more-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 12px;
 }
 
+/* 더보기 아이콘 이미지 */
 .load-more-icon {
   width: 24px;
   height: 24px;
   object-fit: contain;
   background-color: #fafafa;
 }
+
+/* 더보기 버튼 자체 */
 .load-more {
   background-color: #fafafa;
   border: none;

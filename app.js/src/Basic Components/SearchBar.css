@@ -1,20 +1,20 @@
 .search-bar-container {
   display: flex;
   align-items: center;
-  background-color: white;
-  border-radius: 30px;
+  background-color: white;          /* 전체 배경 흰색 */
+  border-radius: 30px;              /* pill 형태로 둥글게 */
   padding: 6px 12px;
   width: 350px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);  /* 살짝 그림자 */
 }
 
 .search-input {
-  flex: 1;
+  flex: 1;                          /* 남은 공간 전체 사용 */
   border: none;
   outline: none;
   font-size: 14px;
   padding: 6px 8px;
-  background-color: transparent;
+  background-color: transparent;    /* 배경 투명 */
   color: black;
 }
 
@@ -25,10 +25,10 @@
   margin-left: 6px;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: center;              /* 아이콘 수직 정렬 */
 }
 
-.search-button img {
+.search-icon-right {
   width: 16px;
   height: 16px;
 }

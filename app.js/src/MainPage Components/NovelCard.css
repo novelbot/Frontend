@@ -1,4 +1,4 @@
-.novel-card {
+.novel-info {
   width: 100%;
   height: 650px;
   background-color: white;
@@ -10,25 +10,25 @@
   align-items: center;
 }
 
-.novel-card-image-wrapper {
+.novel-info-image-wrapper {
   position: relative;
   width: 80%;
-  aspect-ratio: 2 / 3;  /* 세로가 더 긴 비율 (표지 비율) */
+  aspect-ratio: 2 / 3; /* 세로가 더 긴 비율 (표지 비율) */
   border-radius: 12px;
-  overflow: hidden;     /* 이미지 넘침 방지 */
+  overflow: hidden; /* 이미지 넘침 방지 */
 }
 
 /* ✅ 표지 이미지 스타일 */
-.novel-card-foreground {
+.novel-info-foreground {
   position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;     /* 이미지가 꽉 차도록 */
+  object-fit: cover; /* 이미지가 꽉 차도록 */
   z-index: 1;
   border-radius: 12px;
 }
 
-.novel-card-title {
+.novel-info-title {
   font-size: 16px;
   font-weight: bold;
   color: black;
@@ -36,24 +36,24 @@
   text-align: center;
 }
 
-.novel-card-meta {
+.novel-info-meta {
   font-size: 12px;
   color: #666;
   text-align: center;
   margin: 0;
 }
 
-.novel-card-description {
+.novel-info-description {
   height: 150px;
   font-size: 13px;
   line-height: 1.4;
   color: #333;
-  white-space: pre-wrap;     /* 줄바꿈, 공백 유지 */
+  white-space: pre-wrap; /* 줄바꿈, 공백 유지 */
   margin-bottom: 20px;
 }
 
 /* ▶️ 시작/좋아요 버튼 배치 영역 */
-.novel-card-buttons {
+.novel-info-buttons {
   display: flex;
   justify-content: space-between;
   width: 100%;

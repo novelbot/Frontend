@@ -1,6 +1,28 @@
 body {
-  margin: 0;
-  padding-top: 55px; /* 헤더 높이만큼 밀어줌 */
+  margin: 0;  
   background-color: white;
   font-family: sans-serif;
+  display: flex;
+  justify-content: center;
 }
+
+/* 전체 페이지 스크롤바 */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E1EAF5;  /* 배경색 유지 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cfd8e6;  /* ✅ 연회색-블루: 눈에 잘 띄고 배경과 조화 */
+  border-radius: 10px;
+  border: 2px solid #E1EAF5;  /* 배경색 테두리로 부드럽게 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aabbd4;  /* hover 시 살짝 더 진하게 */
+}
+
+

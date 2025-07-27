@@ -1,0 +1,49 @@
+/* src/components/Header.css */
+.viewer-header {
+  position: fixed; /* 화면에 고정 */
+  top: 0; /* 상단 고정 */
+  left: 0;
+  right: 0;
+  z-index: 1000; /* 다른 요소 위에 배치 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #c7d7f4;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  height: 60px; /* 높이 고정 (콘텐츠와 맞추기) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.back-arrow {
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.episode-title {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+}
+
+.left-control,
+.right-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome-msg {
+  font-size: 14px;
+  color: #444;
+}

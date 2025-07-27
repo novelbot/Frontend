@@ -45,15 +45,14 @@ function App() {
       )}
       {currentPage === "viewer" && selectedEpisode && (
         <>
-          <ViewerControl title="먼 길 1화" />
+          <ViewerControl
+            title={`${selectedEpisode.number}화: ${selectedEpisode.title}`}
+          />
           <Viewer fullText={selectedEpisode.content} />
+          <BearIcon />
         </>
       )}
     </>
-    // <>
-    //   <ViewerControl title="먼 길 1화" />
-    //   <Viewer />
-    // </>
   );
 }
 

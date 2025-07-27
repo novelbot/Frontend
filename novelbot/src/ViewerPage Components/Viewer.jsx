@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Viewer.css";
 
 function ViewerPage({ fullText }) {
-  const pages = splitTextIntoPages(fullText, 800);
+  const pages = splitTextIntoPages(fullText, 500);
   const [pageIndex, setPageIndex] = useState(0);
 
   const leftPage = pages[pageIndex] || "";
@@ -22,9 +22,9 @@ function ViewerPage({ fullText }) {
 
   return (
     <div className="viewer-main">
-      <button onClick={goToPreviousPage} className="arrow-button">
-        ←
-      </button>
+      <span onClick={goToPreviousPage} className="arrow-button">
+        〈
+      </span>
 
       <section className="page left-page">
         {textWithLineBreaks(leftPage)}
@@ -33,9 +33,9 @@ function ViewerPage({ fullText }) {
         {textWithLineBreaks(rightPage)}
       </section>
 
-      <button onClick={goToNextPage} className="arrow-button">
-        →
-      </button>
+      <span onClick={goToNextPage} className="arrow-button">
+        〉
+      </span>
     </div>
   );
 }
@@ -62,25 +62,12 @@ function splitTextIntoPages(text, maxCharsPerPage = 800) {
 }
 
 function textWithLineBreaks(text) {
-  const lines = text.split(/\n/);
-  const elements = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim() === "") {
-      // 빈 줄: 두 줄 띄우기
-      elements.push(<br key={`br1-${i}`} />);
-      elements.push(<br key={`br2-${i}`} />);
-    } else {
-      elements.push(
-        <React.Fragment key={i}>
-          {lines[i]}
-          <br />
-        </React.Fragment>
-      );
-    }
-  }
-
-  return elements;
+  const paragraphs = text.split(/\n\s*\n?/); // 한 줄 띄우기만 있어도 분리
+  return paragraphs.map((para, index) => (
+    <p key={index} style={{ marginBottom: "1.5em", whiteSpace: "pre-line" }}>
+      {para.trim()}
+    </p>
+  ));
 }
 
 export default ViewerPage;

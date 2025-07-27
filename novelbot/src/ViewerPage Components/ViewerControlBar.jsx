@@ -8,12 +8,12 @@ function Header({ title }) {
       <div className="left-control">
         <h3
           className="back-arrow"
-          onClick={() => navigate(-1)}
+          onClick={() => setCurrentPage("detail")}
           style={{ cursor: "pointer" }}
         >
           ←
         </h3>
-        <h1 className="episode-title">{title}</h1>
+        <h3 className="episode-title">{title}</h3>
       </div>
 
       <div className="right-control">

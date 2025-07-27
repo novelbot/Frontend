@@ -1,4 +1,3 @@
-// App.jsx
 import { useState } from "react";
 import "./App.css";
 import Header from "./Basic Components/Header";
@@ -7,6 +6,8 @@ import BearIcon from "./Basic Components/BearIcon";
 import NovelList from "./NovelListPage Components/NovelList";
 import Viewer from "./ViewerPage Components/Viewer";
 import ViewerControl from "./ViewerPage Components/ViewerControlBar";
+import Login from "./LoginPage Components/Login";
+import Cart from "./CartPage Components/Cart";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("novelList");
@@ -22,18 +23,15 @@ function App() {
     setSelectedEpisode(episode);
     setCurrentPage("viewer");
   };
+
   return (
     <>
       <Header onNavigate={setCurrentPage} />
+
       {currentPage === "novelList" && (
-        <NovelList onSelectNovel={handleSelectNovel} /> // 여기에 함수 전달
+        <NovelList onSelectNovel={handleSelectNovel} />
       )}
-      {currentPage === "novelDetail" && (
-        <>
-          <NovelDetail novel={selectedNovel} />
-          <BearIcon />
-        </>
-      )}
+
       {currentPage === "detail" && selectedNovel && (
         <>
           <NovelDetail
@@ -43,6 +41,7 @@ function App() {
           <BearIcon />
         </>
       )}
+
       {currentPage === "viewer" && selectedEpisode && (
         <>
           <ViewerControl
@@ -52,6 +51,10 @@ function App() {
           <BearIcon />
         </>
       )}
+
+      {currentPage === "cart" && <Cart />}
+
+      {currentPage === "login" && <Login />}
     </>
   );
 }

@@ -8,7 +8,7 @@ function Header({ title }) {
       <div className="left-control">
         <h3
           className="back-arrow"
-          onClick={() => setCurrentPage("detail")}
+          onClick={() => navigate(-1)}
           style={{ cursor: "pointer" }}
         >
           ←

@@ -11,7 +11,7 @@ import cover7 from "../data/25_먼길 표지.png";
 import downIcon from "../assets/down.png";
 
 // 보여줄 개수 단위
-const ITEMS_PER_BATCH = 2;
+const ITEMS_PER_BATCH = 3;
 
 const sampleCart = [
   {

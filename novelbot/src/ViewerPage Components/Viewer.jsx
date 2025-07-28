@@ -1,8 +1,26 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import "./Viewer.css";
+import { dummyEpisodes } from "../data/episodeData";
+import ViewerControlBar from "./ViewerControlBar";
 
-function ViewerPage({ fullText }) {
-  const pages = splitTextIntoPages(fullText, 500);
+function Viewer() {
+  const { id, number } = useParams();
+
+  const episode = dummyEpisodes.find(
+    (ep) =>
+      String(ep.id) === String(id) && String(ep.number) === String(number)
+  );
+
+  if (!episode) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "4rem", color: "#444" }}>
+        에피소드를 찾을 수 없습니다.
+      </div>
+    );
+  }
+
+  const pages = splitTextIntoPages(episode.content, 500);
   const [pageIndex, setPageIndex] = useState(0);
 
   const leftPage = pages[pageIndex] || "";
@@ -20,31 +38,32 @@ function ViewerPage({ fullText }) {
     }
   };
 
+
   return (
-    <div className="viewer-main">
-      <span onClick={goToPreviousPage} className="arrow-button">
-        〈
-      </span>
+    <div className="viewer-container">
+      {/* ✅ 헤더는 최상단에 */}
+      <ViewerControlBar title={`${episode.number}화 - ${episode.title}`} />
 
-      <section className="page left-page">
-        {textWithLineBreaks(leftPage)}
-      </section>
-      <section className="page right-page">
-        {textWithLineBreaks(rightPage)}
-      </section>
+      {/* ✅ 본문 뷰어는 따로 */}
+      <div className="viewer-main">
+        <span onClick={goToPreviousPage} className="arrow-button">〈</span>
 
-      <span onClick={goToNextPage} className="arrow-button">
-        〉
-      </span>
+        <section className="page left-page">
+          {textWithLineBreaks(leftPage)}
+        </section>
+        <section className="page right-page">
+          {textWithLineBreaks(rightPage)}
+        </section>
+
+        <span onClick={goToNextPage} className="arrow-button">〉</span>
+      </div>
     </div>
   );
 }
 
+// 텍스트를 페이지 단위로 분할
 function splitTextIntoPages(text, maxCharsPerPage = 800) {
-  const paragraphs = text
-    .trim()
-    .split("\n")
-    .filter((p) => p.trim() !== "");
+  const paragraphs = text.trim().split("\n").filter((p) => p.trim() !== "");
   const pages = [];
   let currentPage = "";
 
@@ -61,8 +80,9 @@ function splitTextIntoPages(text, maxCharsPerPage = 800) {
   return pages;
 }
 
+// 줄바꿈 포함한 단락 표시
 function textWithLineBreaks(text) {
-  const paragraphs = text.split(/\n\s*\n?/); // 한 줄 띄우기만 있어도 분리
+  const paragraphs = text.split(/\n\s*\n?/);
   return paragraphs.map((para, index) => (
     <p key={index} style={{ marginBottom: "1.5em", whiteSpace: "pre-line" }}>
       {para.trim()}
@@ -70,4 +90,4 @@ function textWithLineBreaks(text) {
   ));
 }
 
-export default ViewerPage;
+export default Viewer;

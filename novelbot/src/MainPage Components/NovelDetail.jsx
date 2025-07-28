@@ -1,18 +1,28 @@
+// NovelDetail.jsx
+import { useParams } from "react-router-dom";
 import "./NovelDetail.css";
 import NovelCard from "./NovelCard";
 import NovelEpisode from "./NovelEpisode";
+import { novels } from "../data/novelData";
 
-const NovelDetail = ({ novel, handleEpisodeClick }) => {
+const NovelDetail = () => {
+  const { id } = useParams();
+
+  const novel = novels.find(
+    (n) => n.id === id || n.title.replace(/\s+/g, "") === id
+  );
+
+  if (!novel) {
+    return <div>해당 소설을 찾을 수 없습니다.</div>;
+  }
+
   return (
     <div className="novel-detail-container">
-      {/* 전체 상세 페이지 레이아웃 */}
       <div className="novel-detail-left">
-        {/* 왼쪽: 소설 카드 정보 */}
         <NovelCard novel={novel} />
       </div>
       <div className="novel-detail-right">
-        {/* 오른쪽: 에피소드 목록 */}
-        <NovelEpisode novel={novel} handleEpisodeClick={handleEpisodeClick} />
+        <NovelEpisode novel={novel} />
       </div>
     </div>
   );

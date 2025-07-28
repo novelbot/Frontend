@@ -10,6 +10,7 @@ import Viewer from "./ViewerPage Components/Viewer";
 import Login from "./Login&JoinPage Components/Login";
 import Cart from "./CartPage Components/Cart";
 import Signup from "./Login&JoinPage Components/Signup";
+import MyPage from "./MyPage Components/MyPage";
 
 function App() {
   const location = useLocation();
@@ -24,7 +25,8 @@ function App() {
         <Route path="/viewer/:id/:number" element={<Viewer />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
-        <Route path="sign" element={<Signup />} />
+        <Route path="/sign" element={<Signup />} />
+        <Route path="/MyPage" element={<MyPage/>} />
       </Routes>
 
       <BearIcon />

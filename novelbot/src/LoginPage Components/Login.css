@@ -1,0 +1,86 @@
+/* 전체 컨테이너 */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: white;
+}
+
+/* 로고 */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+/* 로그인 박스 */
+.login-box {
+  width: 380px;
+  background: #fff;
+  padding: 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+}
+
+/* 버튼 */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #a8c9ff;
+  border: none;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.login-btn:hover {
+  background-color: #91baff;
+}
+
+.signup-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #f0f0f0;
+  border: none;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.signup-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* 구분선 */
+.divider {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  color: #888;
+}
+
+.divider hr {
+  flex: 1;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.divider span {
+  margin: 0 8px;
+  font-size: 12px;
+  color: #666;
+}

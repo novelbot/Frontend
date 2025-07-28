@@ -12,6 +12,7 @@
   padding: 0 40px;
   box-sizing: border-box;
   z-index: 1000;                  /* 다른 요소 위에 표시 */
+  color: white;
 }
 
 /* 왼쪽 로고 및 메뉴 그룹 */
@@ -25,12 +26,23 @@
   font-weight: 800;
   font-size: 22px;
   cursor: pointer;
+  margin: 0!important;
+  text-decoration: none;  /* 밑줄 제거 */
+  color: inherit;          /* 색상 유지 */
 }
 
 .menu {
   font-weight: 600;
   font-size: 18px;
   cursor: pointer;
+  text-decoration: none;  /* 밑줄 제거 */
+  color: inherit;          /* 색상 유지 */
+}
+
+.menu:hover,
+.logo:hover {
+  text-decoration: none;     /* hover 시에도 밑줄 제거 */
+  color: inherit;            /* hover 시에도 색상 유지 */
 }
 
 /* 오른쪽 로그인 영역 */
@@ -47,6 +59,12 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+.login-section a {
+  color: white;          /* 원하는 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
 
 /* 로그인 아이콘 이미지 */
 .login-section img {

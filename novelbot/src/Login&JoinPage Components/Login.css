@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 500px;
   background: white;
 }
 
@@ -12,12 +12,12 @@
 .logo {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 32px;
+  margin-bottom: 32px !important;
 }
 
 /* 로그인 박스 */
 .login-box {
-  width: 380px;
+  width: 580px;
   background: #fff;
   padding: 32px;
   border: 1px solid #e0e0e0;
@@ -54,7 +54,7 @@
 .signup-btn {
   width: 100%;
   padding: 12px;
-  background-color: #f0f0f0;
+  background-color: #f0f0f0 !important;
   border: none;
   font-weight: bold;
   border-radius: 4px;

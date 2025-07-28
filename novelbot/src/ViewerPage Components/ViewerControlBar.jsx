@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ViewerControlBar.css";
 import { dummyEpisodes } from "../data/episodeData";
+import { novels } from "../data/novelData";
 
 function ViewerControlBar({ title }) {
   const navigate = useNavigate();
@@ -9,25 +10,16 @@ function ViewerControlBar({ title }) {
 
   const currentNumber = parseInt(number, 10);
   const novelId = Number(id);
-
-  const currentEpisode = dummyEpisodes.find(
-    (ep) => ep.id === novelId && ep.number === currentNumber
-  );
-
-  // 🔑 제목에서 공백 제거한 slug 만들기
-  const slug = currentEpisode?.novelTitle?.replace(/\s+/g, "");
+  
+  const novel = novels.find((n) => n.novelId === novelId);
+  const slug = novel?.title?.replace(/\s+/g, "");
 
   const goBackToDetail = () => {
     if (slug) {
       navigate(`/MainPage/${slug}`);
-    } else {
-      navigate(-1); // fallback
-    }
+    } 
   };
 
-  const goToEpisode = (episodeNumber) => {
-    navigate(`/viewer/${novelId}/${episodeNumber}`);
-  };
 
   const hasPrevious = dummyEpisodes.some(
     (ep) => ep.id === novelId && ep.number === currentNumber - 1

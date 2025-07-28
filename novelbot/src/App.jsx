@@ -7,9 +7,9 @@ import BearIcon from "./Basic Components/BearIcon";
 import NovelList from "./NovelListPage Components/NovelList";
 import NovelDetail from "./MainPage Components/NovelDetail";
 import Viewer from "./ViewerPage Components/Viewer";
-import ViewerControl from "./ViewerPage Components/ViewerControlBar";
-import Login from "./LoginPage Components/Login";
+import Login from "./Login&JoinPage Components/Login";
 import Cart from "./CartPage Components/Cart";
+import Signup from "./Login&JoinPage Components/Signup";
 
 function App() {
   const location = useLocation();
@@ -24,6 +24,7 @@ function App() {
         <Route path="/viewer/:id/:number" element={<Viewer />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
+        <Route path="sign" element={<Signup />} />
       </Routes>
 
       <BearIcon />

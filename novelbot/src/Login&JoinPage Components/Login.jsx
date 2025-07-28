@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
@@ -41,9 +42,11 @@ function Login() {
           <hr />
         </div>
 
-        <button className="signup-btn" onClick={handleSignup}>
-          회원가입
-        </button>
+<Link to="/sign">
+  <button className="signup-btn">
+    회원가입
+  </button>
+</Link>
       </div>
     </div>
   );

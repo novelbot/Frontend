@@ -9,7 +9,7 @@ function Header() {
     <header className="header">
       {/* 왼쪽: 로고 + 메뉴 */}
       <div className="left-section">
-        <Link to="/" className="logo">Novel Bot</Link>
+        <Link to="/" className="header-logo">Novel Bot</Link>
         <Link to="/Cart" className="menu">장바구니</Link>
         <Link to="/" className="menu">웹소설</Link>
       </div>

@@ -22,7 +22,7 @@
   gap: 50px;                      /* 로고와 메뉴 사이 간격 */
 }
 
-.logo {
+.header-logo {
   font-weight: 800;
   font-size: 22px;
   cursor: pointer;
@@ -40,7 +40,7 @@
 }
 
 .menu:hover,
-.logo:hover {
+.header-logo:hover {
   text-decoration: none;     /* hover 시에도 밑줄 제거 */
   color: inherit;            /* hover 시에도 색상 유지 */
 }

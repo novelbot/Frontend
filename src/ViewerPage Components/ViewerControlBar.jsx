@@ -20,6 +20,9 @@ function ViewerControlBar({ title }) {
     } 
   };
 
+  const goToEpisode = (episodeNumber) => {
+    navigate(`/viewer/${novelId}/${episodeNumber}`);
+  };
 
   const hasPrevious = dummyEpisodes.some(
     (ep) => ep.id === novelId && ep.number === currentNumber - 1

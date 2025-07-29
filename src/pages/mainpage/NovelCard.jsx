@@ -1,5 +1,5 @@
 import "./NovelCard.css";
-import heartImg from "../assets/heart.png";
+import heartImg from "/src/assets/heart.png";
 
 const NovelCard = ({ novel }) => {
   if (!novel) return <div>오류 발생</div>;

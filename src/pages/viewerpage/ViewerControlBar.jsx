@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ViewerControlBar.css";
-import { dummyEpisodes } from "../data/episodeData";
-import { novels } from "../data/novelData";
+import { dummyEpisodes } from "/src/data/episodeData";
+import { novels } from "/src/data/novelData";
 
 function ViewerControlBar({ title }) {
   const navigate = useNavigate();

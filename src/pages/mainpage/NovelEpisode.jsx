@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./NovelEpisode.css";
-import downIcon from "../assets/down.png";
-import { dummyEpisodes } from "../data/episodeData";
+import downIcon from "/src/assets/down.png";
+import { dummyEpisodes } from "/src/data/episodeData";
 
 const EPISODES_PER_BATCH = 4;
 

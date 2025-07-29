@@ -66,3 +66,31 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* 모바일: 작은 화면 */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* 태블릿 */
+@media (min-width: 481px) and (max-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* 데스크탑 */
+@media (min-width: 1025px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+/* 고해상도 데스크탑 */
+@media (min-width: 1025px) and (min-resolution: 2dppx) {
+  html {
+    font-size: 20px;
+  }
+}

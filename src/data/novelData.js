@@ -4,7 +4,7 @@ import cover3 from "./03_카프카를 읽는 밤 표지.png";
 import cover4 from "./04_강아지똥 표지.png";
 import cover5 from "./05_등신불 표지.png";
 import cover6 from "./06_바위 표지.png";
-import cover7 from "./25_먼길 표지.png";
+import cover25 from "./25_먼길 표지.png";
 
 export const novels = [
   {
@@ -68,6 +68,7 @@ export const novels = [
     description:
       "바다에 대한 깊은 트라우마를 가진 한영은, 감정을 숨긴 채 정체불명의 친구 명우와 함께 낚싯배에 오른다. 소나기 예보와 거친 파도, 그리고 서로가 감추고 있는 속내 속에서, 그들은 점점 바다의 깊은 이면과 마주하게 된다.",
     genre: "일상, 드라마",
-    coverImageUrl: cover7,
+    coverImageUrl: cover25,
   },
+  
 ];

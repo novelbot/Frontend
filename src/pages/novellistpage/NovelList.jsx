@@ -1,8 +1,8 @@
-// src/MainPage Components/NovelList.jsx
+// src/mainpage/NovelList.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import "./NovelList.css";
-import { novels } from "../data/novelData";
+import { novels } from "/src/data/novelData";
 
 const NovelList = () => {
   const toSlug = (title) => title.replace(/\s+/g, ""); // 공백 제거

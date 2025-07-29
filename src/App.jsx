@@ -2,15 +2,15 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import { useLocation } from "react-router-dom";
-import Header from "./Basic Components/Header";
-import BearIcon from "./Basic Components/BearIcon";
-import NovelList from "./NovelListPage Components/NovelList";
-import NovelDetail from "./MainPage Components/NovelDetail";
-import Viewer from "./ViewerPage Components/Viewer";
-import Login from "./Login&JoinPage Components/Login";
-import Cart from "./CartPage Components/Cart";
-import Signup from "./Login&JoinPage Components/Signup";
-import MyPage from "./MyPage Components/MyPage";
+import Header from "./components/Header";
+import BearIcon from "./components/BearIcon";
+import NovelList from "./pages/novellistpage/NovelList";
+import NovelDetail from "./pages/mainpage/NovelDetail";
+import Viewer from "./pages/viewerpage/Viewer";
+import Login from "./pages/loginpage/Login";
+import Cart from "./pages/cartpage/Cart";
+import Signup from "./pages/loginpage/Signup";
+import MyPage from "./pages/mypage/MyPage";
 
 function App() {
   const location = useLocation();

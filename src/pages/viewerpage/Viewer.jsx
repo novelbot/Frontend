@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Viewer.css";
-import { dummyEpisodes } from "../data/episodeData";
+import { dummyEpisodes } from "/src/data/episodeData";
 import ViewerControlBar from "./ViewerControlBar";
 
 function Viewer() {

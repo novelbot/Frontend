@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Cart.css";
-import cover1 from "../data/01_젊은 느티나무 표지.png";
-import cover2 from "../data/02_백치 아다다 표지.png";
-import cover3 from "../data/03_카프카를 읽는 밤 표지.png";
-import cover4 from "../data/04_강아지똥 표지.png";
-import cover5 from "../data/05_등신불 표지.png";
-import cover6 from "../data/06_바위 표지.png";
-import cover7 from "../data/25_먼길 표지.png";
-import downIcon from "../assets/down.png";
+import cover1 from "/src/data/01_젊은 느티나무 표지.png";
+import cover2 from "/src/data/02_백치 아다다 표지.png";
+import cover3 from "/src/data/03_카프카를 읽는 밤 표지.png";
+import cover4 from "/src/data/04_강아지똥 표지.png";
+import cover5 from "/src/data/05_등신불 표지.png";
+import cover6 from "/src/data/06_바위 표지.png";
+import cover7 from "/src/data/25_먼길 표지.png";
+import downIcon from "/src/assets/down.png";
 
 // 보여줄 개수 단위
 const ITEMS_PER_BATCH = 3;

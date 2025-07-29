@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "./NovelDetail.css";
 import NovelCard from "./NovelCard";
 import NovelEpisode from "./NovelEpisode";
-import { novels } from "../data/novelData";
+import { novels } from "/src/data/novelData";
 
 const NovelDetail = () => {
   const { id } = useParams();

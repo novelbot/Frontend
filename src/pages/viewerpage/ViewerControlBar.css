@@ -19,8 +19,8 @@
   cursor: pointer;
   user-select: none;
   position: relative;
-  top: -0.2rem;
   color: white;
+  margin: 0;
 }
 
 .episode-title {
@@ -29,6 +29,7 @@
   font-weight: bold;
   font-size: 1rem; /* 18px → 0.9rem 수정*/
   color: white;
+  margin: 0;
 }
 
 .nav-button {

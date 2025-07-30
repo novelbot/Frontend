@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./Viewer.css";
 import { dummyEpisodes } from "/src/data/episodeData";
@@ -8,8 +8,7 @@ function Viewer() {
   const { id, number } = useParams();
 
   const episode = dummyEpisodes.find(
-    (ep) =>
-      String(ep.id) === String(id) && String(ep.number) === String(number)
+    (ep) => String(ep.id) === String(id) && String(ep.number) === String(number)
   );
 
   if (!episode) {
@@ -28,25 +27,38 @@ function Viewer() {
 
   const goToNextPage = () => {
     if (pageIndex + 2 < pages.length) {
-      setPageIndex(pageIndex + 2);
+      setPageIndex((prev) => prev + 2);
     }
   };
 
   const goToPreviousPage = () => {
     if (pageIndex - 2 >= 0) {
-      setPageIndex(pageIndex - 2);
+      setPageIndex((prev) => prev - 2);
     }
   };
 
+  // 키보드 이벤트 추가
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        goToNextPage();
+      } else if (e.key === "ArrowLeft") {
+        goToPreviousPage();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [pageIndex]); // pageIndex가 바뀔 때마다 최신 상태를 사용
 
   return (
     <div className="viewer-container">
-      {/* ✅ 헤더는 최상단에 */}
       <ViewerControlBar title={`${episode.number}화 - ${episode.title}`} />
 
-      {/* ✅ 본문 뷰어는 따로 */}
       <div className="viewer-main">
-        <span onClick={goToPreviousPage} className="arrow-button">〈</span>
+        <span onClick={goToPreviousPage} className="arrow-button">
+          〈
+        </span>
 
         <section className="page left-page">
           {textWithLineBreaks(leftPage)}
@@ -55,7 +67,9 @@ function Viewer() {
           {textWithLineBreaks(rightPage)}
         </section>
 
-        <span onClick={goToNextPage} className="arrow-button">〉</span>
+        <span onClick={goToNextPage} className="arrow-button">
+          〉
+        </span>
       </div>
     </div>
   );
@@ -63,7 +77,10 @@ function Viewer() {
 
 // 텍스트를 페이지 단위로 분할
 function splitTextIntoPages(text, maxCharsPerPage = 800) {
-  const paragraphs = text.trim().split("\n").filter((p) => p.trim() !== "");
+  const paragraphs = text
+    .trim()
+    .split("\n")
+    .filter((p) => p.trim() !== "");
   const pages = [];
   let currentPage = "";
 

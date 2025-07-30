@@ -84,7 +84,7 @@ button:focus-visible {
 /* 데스크탑 */
 @media (min-width: 1025px) {
   html {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 

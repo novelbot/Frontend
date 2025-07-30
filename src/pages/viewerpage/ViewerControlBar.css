@@ -1,49 +1,53 @@
 /* src/components/Header.css */
 .viewer-header {
-  position: fixed; /* 화면에 고정 */
-  top: 0; /* 상단 고정 */
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* 다른 요소 위에 배치 */
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #c7d7f4;
-  padding: 10px 20px;
-  border-bottom: 1px solid #ccc;
-  height: 60px; /* 높이 고정 (콘텐츠와 맞추기) */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #a0c4f2;
+  padding: 0 2rem; /* 10px 20px → 0.5rem 1rem */
+  border-bottom: 0.05rem solid #ccc; /* 1px → 0.05rem */
+  height: 3rem; /* 60px → 3rem */
 }
 
 .back-arrow {
-  font-size: 20px;
+  font-size: 1rem; /* 20px → 1rem 수정*/
   cursor: pointer;
   user-select: none;
+  position: relative;
+  color: white;
+  margin: 0;
 }
 
 .episode-title {
   flex: 1;
   text-align: center;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1rem; /* 18px → 0.9rem 수정*/
+  color: white;
+  margin: 0;
 }
 
 .nav-button {
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 0.9rem; /* 14px → 0.7rem 수정*/
   cursor: pointer;
-  color: #333;
+  color: white;
 }
 
 .left-control,
 .right-control {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.6rem; /* 12px → 0.6rem */
 }
 
 .welcome-msg {
-  font-size: 14px;
-  color: #444;
+  font-size: 0.8rem; /* 14px → 0.7rem 수정*/
+  color: white;
 }

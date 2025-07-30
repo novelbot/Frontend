@@ -1,25 +1,24 @@
 /* NovelList.css */
 .novel-list-container {
-  /*padding: 20px;*/
-  max-width: 1240px;
+  max-width: 62rem; /* 1240px → 62rem */
   margin: 0 auto;
-  padding: 70px 0px 20px 40px;
+  padding: 3.5rem 0 1rem 2rem; /* 70px 0px 20px 40px → 3.5rem 0 1rem 2rem */
 }
 
 .novel-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
+  gap: 0.8rem; /* 16px → 0.8rem */
+  justify-content: left;
 }
 
 .novel-card {
   position: relative;
-  width: 160px;
-  height: 240px;
-  border-radius: 12px;
+  width: 8rem; /* 160px → 8rem */
+  height: 12rem; /* 240px → 12rem */
+  border-radius: 0.6rem; /* 12px → 0.6rem */
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2); /* 4px 10px → 0.2rem 0.5rem */
   cursor: pointer;
   transition: transform 0.2s;
   background-color: #000; /* 로딩 중 빈 배경도 어둡게 */
@@ -45,19 +44,19 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 10px;
+  padding: 0.5rem; /* 10px → 0.5rem */
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
   color: white;
 }
 
 .novel-overlay h4 {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.7rem; /* 14px → 0.7rem */
   font-weight: bold;
 }
 
 .novel-overlay p {
-  margin: 2px 0 0;
-  font-size: 12px;
+  margin: 0.1rem 0 0; /* 2px → 0.1rem */
+  font-size: 0.6rem; /* 12px → 0.6rem */
   color: #ccc;
 }

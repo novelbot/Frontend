@@ -1,11 +1,11 @@
 .bear-icon {
   position: fixed;      /* 화면 오른쪽 하단에 고정 */
-  bottom: 10px;
-  right: 8px;
+  bottom: 0.5rem;        /* 10px → 0.5rem */
+  right: 0.4rem;         /* 8px → 0.4rem */
 }
 
 .bear-icon img {
-  width: 150px;         /* 곰돌이 이미지 크기 고정 */
+  width: 7.5rem;         /* 150px → 7.5rem */
   height: auto;
   display: block;
 }
@@ -13,29 +13,29 @@
 /* 🟦 곰돌이 위에 나타나는 말풍선 스타일 */
 .bear-tooltip {
   position: absolute;
-  bottom: 70%;            /* 이미지 위에 위치 */
-  right: 90px;            /* 이미지 기준으로 왼쪽으로 이동 */
-  margin-bottom: 8px;     /* 말풍선과 이미지 간격 */
-  background-color: #2196f3;  /* 파란색 말풍선 배경 */
+  bottom: 70%;        /* 70%는 비율이므로 그대로 유지 */
+  right: 4.5rem;         /* 90px → 4.5rem */
+  margin-bottom: 0.4rem; /* 8px → 0.4rem */
+  background-color: #2196f3;
   color: white;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 13px;
-  white-space: nowrap;    /* 줄바꿈 없이 한 줄로 표시 */
-  opacity: 0;             /* 기본은 보이지 않음 */
-  transition: opacity 0.3s ease;  /* 자연스럽게 나타남 */
-  pointer-events: none;   /* 말풍선 위에 마우스 올라가도 이벤트 없음 */
+  padding: 0.4rem 0.6rem; /* 8px 12px → 0.4rem 0.6rem */
+  border-radius: 0.5rem;  /* 10px → 0.5rem */
+  font-size: 0.65rem;     /* 13px → 0.65rem */
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 /* 말풍선 꼬리 */
 .bear-tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;               /* 말풍선 아래에 위치 */
-  right: 12px;
-  border-width: 6px;
+  top: 100%;
+  right: 0.6rem;         /* 12px → 0.6rem */
+  border-width: 0.3rem;  /* 6px → 0.3rem */
   border-style: solid;
-  border-color: #2196f3 transparent transparent transparent; /* 위쪽 방향 화살표 */
+  border-color: #2196f3 transparent transparent transparent;
 }
 
 /* 🐻 곰돌이에 마우스를 올렸을 때 말풍선 보이게 */

@@ -1,17 +1,17 @@
 .novel-detail-container {
-  display: flex;                      /* 좌우 2단 구성 */
+  display: flex;
   justify-content: center;
-  width: 1200px;                      /* 전체 카드 너비 고정 */
+  width: 60rem;                     /* 1200px → 60rem */
   background-color: white;
-  border-radius: 16px;
-  margin-top: 80px;                   /* 상단과 간격 */
+  border-radius: 0.8rem;            /* 16px → 0.8rem */
+  margin-top: 4rem;                 /* 80px → 4rem */
 }
 
 .novel-detail-left {
-  width: 350px;                       /* 왼쪽 정보 영역 */
-  margin-right: 80px;                /* 오른쪽과 간격 */
+  width: 17.5rem;                   /* 350px → 17.5rem */
+  margin-right: 4rem;              /* 80px → 4rem */
 }
 
 .novel-detail-right {
-  flex: 1;                            /* 나머지 영역 모두 사용 */
+  flex: 1;
 }

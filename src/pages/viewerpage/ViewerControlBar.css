@@ -40,6 +40,12 @@
   color: white;
 }
 
+.nav-button.disabled {
+  color: transparent;
+  cursor: default;
+  pointer-events: none; /* 클릭 비활성화 */
+}
+
 .left-control,
 .right-control {
   display: flex;

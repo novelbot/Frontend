@@ -15,15 +15,20 @@ function BearIcon({ isOpen, setIsOpen }) {
     <>
       <div className="bear-icon" onClick={toggleOverlay}>
         <img src={isOpen ? bearUp : bearDown} alt="bear" />
-
         {/* 오버레이가 닫혀있을 때만 말풍선 표시 */}
         <div className={`bear-tooltip ${isOpen ? "disabled" : ""}`}>
           회원가입 후 곰과 대화해 보세요!
         </div>
       </div>
 
-      {/* 오버레이 열렸을 때만 컴포넌트 렌더링 */}
-      {isOpen && <BearOverlay onClose={toggleOverlay} />}
+      {/* 오버레이 열렸을 때 컴포넌트 분기 */}
+      {isOpen && (
+        isViewerPage ? (
+          <ChatBearOverlay onClose={toggleOverlay} />
+        ) : (
+          <BearOverlay onClose={toggleOverlay} />
+        )
+      )}
     </>
   );
 }

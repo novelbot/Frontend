@@ -4,7 +4,7 @@ import "./Viewer.css";
 import { dummyEpisodes } from "/src/data/episodeData";
 import ViewerControlBar from "./ViewerControlBar";
 
-function Viewer() {
+function Viewer({ bearOpen }) {
   const { id, number } = useParams();
 
   const episode = dummyEpisodes.find(
@@ -37,6 +37,10 @@ function Viewer() {
     }
   };
 
+  // 첫 페이지, 마지막 페이지 확인용 변수
+  const isPrevDisabled = pageIndex === 0;
+  const isNextDisabled = pageIndex + 2 >= pages.length;
+
   // 키보드 이벤트 추가
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -53,10 +57,17 @@ function Viewer() {
 
   return (
     <div className="viewer-container">
-      <ViewerControlBar title={`${episode.number}화 - ${episode.title}`} />
+      <ViewerControlBar
+        title={`${episode.number}화 - ${episode.title}`}
+        pageIndex={pageIndex}
+        setPageIndex={setPageIndex}
+      />
 
-      <div className="viewer-main">
-        <span onClick={goToPreviousPage} className="arrow-button">
+      <div className={`viewer-main ${bearOpen ? "shrink" : ""}`}>
+        <span
+          onClick={goToPreviousPage}
+          className={`arrow-button ${isPrevDisabled ? "disabled" : ""}`}
+        >
           〈
         </span>
 
@@ -67,7 +78,10 @@ function Viewer() {
           {textWithLineBreaks(rightPage)}
         </section>
 
-        <span onClick={goToNextPage} className="arrow-button">
+        <span
+          onClick={goToNextPage}
+          className={`arrow-button ${isNextDisabled ? "disabled" : ""}`}
+        >
           〉
         </span>
       </div>

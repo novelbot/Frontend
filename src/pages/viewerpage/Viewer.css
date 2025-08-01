@@ -34,7 +34,13 @@
   padding: 3rem; /* 60px → 3rem */
   height: 100vh; /* 화면 전체 높이 */
   box-sizing: border-box; /* padding 포함 계산 */
+  transition: all 0.5s ease; /* 부드럽게 애니메이션 */
   /*background-color: #f9f9f9;*/
+}
+
+.viewer-main.shrink {
+  transform: translateX(-9rem); /* 왼쪽으로 이동 */
+  /*width: 97%;*/
 }
 
 .page {
@@ -62,6 +68,12 @@
   user-select: none;
   display: inline-block;
   z-index: 10;
+}
+
+.arrow-button.disabled {
+  color: #bec1c6;
+  cursor: default;
+  pointer-events: none; /* 클릭 비활성화 */
 }
 
 p {

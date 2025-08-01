@@ -1,7 +1,7 @@
 // App.jsx
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
 import Header from "./components/Header";
 import BearIcon from "./components/BearIcon";
 import NovelList from "./pages/novellistpage/NovelList";
@@ -15,21 +15,25 @@ import MyPage from "./pages/mypage/MyPage";
 function App() {
   const location = useLocation();
   const isViewerPage = location.pathname.startsWith("/viewer/");
+
+  const [bearOpen, setBearOpen] = useState(false);
   return (
     <>
-      {!isViewerPage && <Header />} {/* Viewer 페이지에선 기본 헤더 안 보이게 */}
-
+      {!isViewerPage && <Header />}{" "}
+      {/* Viewer 페이지에선 기본 헤더 안 보이게 */}
       <Routes>
         <Route path="/" element={<NovelList />} />
         <Route path="/MainPage/:id" element={<NovelDetail />} />
-        <Route path="/viewer/:id/:number" element={<Viewer />} />
+        <Route
+          path="/viewer/:id/:number"
+          element={<Viewer bearOpen={bearOpen} />}
+        />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign" element={<Signup />} />
-        <Route path="/MyPage" element={<MyPage/>} />
+        <Route path="/MyPage" element={<MyPage />} />
       </Routes>
-
-      <BearIcon />
+      <BearIcon isOpen={bearOpen} setIsOpen={setBearOpen} />
     </>
   );
 }

@@ -56,12 +56,6 @@ function ChatBearOverlay() {
             <span>{title}</span>
           </div>
         ))}
-        <div className="new-chat-button-container">
-            <button className="new-chat-button">
-                새 대화하기
-                <img src={WhitesendIcon} alt="send" className="new-chat-send-icon" />
-            </button>
-        </div>
       </div>
       <div className="message-button-area">
         <button className="message-button" onClick={() => setView('chat')}>

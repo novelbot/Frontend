@@ -27,13 +27,7 @@ const NovelList = () => {
       <h3>웹소설</h3>
       <div className="novel-grid">
         {novelList.map((novel) => (
-          <NovelCard
-            key={novel.novelId}
-            title={novel.title}
-            genre={novel.genre}
-            author={novel.author}
-            imageUrl={novel.coverImageUrl}
-          />
+          <NovelCard key={novel.novelId} novel={novel} />
         ))}
       </div>
     </div>

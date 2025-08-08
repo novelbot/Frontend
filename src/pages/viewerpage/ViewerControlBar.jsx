@@ -1,48 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ViewerControlBar.css";
-import { dummyEpisodes } from "/src/data/episodeData";
-import { novels } from "/src/data/novelData";
+import { instance } from "/src/API/api";
 
 function ViewerControlBar({ title, pageIndex, setPageIndex }) {
   const navigate = useNavigate();
-  const { id, number } = useParams(); // id: novelId, number: episodeNumber
+  const { id, number, slug } = useParams();
 
   const currentNumber = parseInt(number, 10);
   const novelId = Number(id);
 
-  const novel = novels.find((n) => n.novelId === novelId);
-  const slug = novel?.title?.replace(/\s+/g, "");
+  const [hasPrevious, setHasPrevious] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
 
+  // 이전/다음 화 여부 확인
+  useEffect(() => {
+    async function checkPrevNext() {
+      try {
+        const res = await instance.get(`/novels/${novelId}/episodes`);
+        const episodes = res.data || [];
+        const numbers = episodes.map((ep) => ep.episodeNumber);
+        setHasPrevious(numbers.includes(currentNumber - 1));
+        setHasNext(numbers.includes(currentNumber + 1));
+      } catch (err) {
+        console.error("이전/다음 화 여부 확인 실패:", err);
+        setHasPrevious(false);
+        setHasNext(false);
+      }
+    }
+    checkPrevNext();
+  }, [novelId, currentNumber]);
+
+  // [TODO] 뒤로가기 했을 때 오류 발생
   const goBackToDetail = () => {
-    if (slug) {
-      navigate(`/MainPage/${slug}`);
+    if (id) {
+      navigate(`/MainPage/${id}`);
+    } else {
+      navigate("/MainPage");
     }
   };
 
   const goToEpisode = (episodeNumber) => {
     setPageIndex(0);
-    navigate(`/viewer/${novelId}/${episodeNumber}`);
+    if (slug) {
+      navigate(`/viewer/${novelId}/${episodeNumber}/${slug}`);
+    } else {
+      navigate(`/viewer/${novelId}/${episodeNumber}`);
+    }
   };
-
-  const hasPrevious = dummyEpisodes.some(
-    (ep) => ep.id === novelId && ep.number === currentNumber - 1
-  );
-  const hasNext = dummyEpisodes.some(
-    (ep) => ep.id === novelId && ep.number === currentNumber + 1
-  );
-  // 현재 novelId의 모든 에피소드만 필터링
-  const episodesForNovel = dummyEpisodes.filter((ep) => ep.id === novelId);
-
-  // 에피소드가 하나도 없으면 기본값 처리
-  const maxEpisodeNumber =
-    episodesForNovel.length > 0
-      ? Math.max(...episodesForNovel.map((ep) => ep.number))
-      : 1;
-
-  // 첫 화, 마지막 화 확인용 변수
-  const isFirstEpisode = currentNumber === 1;
-  const isLastEpisode = currentNumber === maxEpisodeNumber;
 
   return (
     <header className="viewer-header">
@@ -59,14 +64,14 @@ function ViewerControlBar({ title, pageIndex, setPageIndex }) {
 
       <div className="right-control">
         <button
-          className={`nav-button ${isFirstEpisode ? "disabled" : ""}`}
+          className={`nav-button ${!hasPrevious ? "disabled" : ""}`}
           onClick={() => goToEpisode(currentNumber - 1)}
           disabled={!hasPrevious}
         >
           ◀ 이전화
         </button>
         <button
-          className={`nav-button ${isLastEpisode ? "disabled" : ""}`}
+          className={`nav-button ${!hasNext ? "disabled" : ""}`}
           onClick={() => goToEpisode(currentNumber + 1)}
           disabled={!hasNext}
         >
@@ -79,3 +84,85 @@ function ViewerControlBar({ title, pageIndex, setPageIndex }) {
 }
 
 export default ViewerControlBar;
+
+// import React from "react";
+// import { useNavigate, useParams } from "react-router-dom";
+// import "./ViewerControlBar.css";
+// import { dummyEpisodes } from "/src/data/episodeData";
+// import { novels } from "/src/data/novelData";
+
+// function ViewerControlBar({ title, pageIndex, setPageIndex }) {
+//   const navigate = useNavigate();
+//   const { id, number } = useParams(); // id: novelId, number: episodeNumber
+
+//   const currentNumber = parseInt(number, 10);
+//   const novelId = Number(id);
+
+//   const novel = novels.find((n) => n.novelId === novelId);
+//   const slug = novel?.title?.replace(/\s+/g, "");
+
+//   const goBackToDetail = () => {
+//     if (slug) {
+//       navigate(`/MainPage/${slug}`);
+//     }
+//   };
+
+//   const goToEpisode = (episodeNumber) => {
+//     setPageIndex(0);
+//     navigate(`/viewer/${novelId}/${episodeNumber}`);
+//   };
+
+//   const hasPrevious = dummyEpisodes.some(
+//     (ep) => ep.id === novelId && ep.number === currentNumber - 1
+//   );
+//   const hasNext = dummyEpisodes.some(
+//     (ep) => ep.id === novelId && ep.number === currentNumber + 1
+//   );
+//   // 현재 novelId의 모든 에피소드만 필터링
+//   const episodesForNovel = dummyEpisodes.filter((ep) => ep.id === novelId);
+
+//   // 에피소드가 하나도 없으면 기본값 처리
+//   const maxEpisodeNumber =
+//     episodesForNovel.length > 0
+//       ? Math.max(...episodesForNovel.map((ep) => ep.number))
+//       : 1;
+
+//   // 첫 화, 마지막 화 확인용 변수
+//   const isFirstEpisode = currentNumber === 1;
+//   const isLastEpisode = currentNumber === maxEpisodeNumber;
+
+//   return (
+//     <header className="viewer-header">
+//       <div className="left-control">
+//         <h3
+//           className="back-arrow"
+//           onClick={goBackToDetail}
+//           style={{ cursor: "pointer" }}
+//         >
+//           ←
+//         </h3>
+//         <h3 className="episode-title">{title}</h3>
+//       </div>
+
+//       <div className="right-control">
+//         <button
+//           className={`nav-button ${isFirstEpisode ? "disabled" : ""}`}
+//           onClick={() => goToEpisode(currentNumber - 1)}
+//           disabled={!hasPrevious}
+//         >
+//           ◀ 이전화
+//         </button>
+//         <button
+//           className={`nav-button ${isLastEpisode ? "disabled" : ""}`}
+//           onClick={() => goToEpisode(currentNumber + 1)}
+//           disabled={!hasNext}
+//         >
+//           다음화 ▶
+//         </button>
+//         <span className="welcome-msg">RyuJaeHun님 환영합니다!</span>
+//       </div>
+//     </header>
+//   );
+// }
+
+// export default ViewerControlBar;

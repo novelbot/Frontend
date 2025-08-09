@@ -9,7 +9,7 @@ import SearchBar from './SearchBar';
 
 function ChatBearOverlay() {
   const [view, setView] = useState('chat'); // 'chat' 또는 'list'
-
+  
   const chatButtons = [
     '이전화 한줄 요약',
     '현재까지 줄거리',
@@ -65,43 +65,95 @@ function ChatBearOverlay() {
     </div>
   );
 
-  // ▼▼▼ ChatBearOverlay JSX ▼▼▼
-  const renderChatOverlay = () => (
-    <div className="bear-overlay">
-      <div className="bear-overlay-content">
-        <div className="chat-header">
-          <img
-            src={backIcon}
-            alt="back"
-            className="chat-icon"
-            onClick={() => setView('list')}
-            style={{ cursor: 'pointer' }}
-          />
-          <span className="chat-title">대화 제목 어쩌고 ...</span>
-          <img src={bookmarkIcon} alt="bookmark" className="chat-icon" />
-        </div>
-      </div>
-
-      <div className="chat-content">
-        {chatButtons.map((text, index) => (
-          <button
-            className="chat-bubble-button"
-            key={index}
-            onClick={() => handleChatButtonClick(text)}
-          >
-            {text}
-          </button>
-        ))}
-      </div>
-
-      <div className="chat-input-bar">
-        <input type="text" placeholder="무엇이든 물어보세요" />
-        <button className="chat-send-btn">
-          <img src={BlacksendIcon} alt="send" className="send-icon" />
-        </button>
+ // ▼▼▼ ChatBearOverlay JSX ▼▼▼
+const renderChatOverlay = () => (
+  <div className="bear-overlay">
+    <div className="bear-overlay-content">
+      <div className="chat-header">
+        <img
+          src={backIcon}
+          alt="back"
+          className="chat-icon"
+          onClick={() => setView('list')}
+          style={{ cursor: 'pointer' }}
+        />
+        <span className="chat-title">대화 제목 어쩌고 ...</span>
+        <img src={bookmarkIcon} alt="bookmark" className="chat-icon" />
       </div>
     </div>
-  );
+
+    <div className="chat-content">
+      {chatHistory.map((item, index) => (
+        <div
+          key={index}
+          className={`chat-bubble ${item.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`}
+        >
+          {item.text}
+        </div>
+      ))}
+
+      {showChatButtons && (
+        <div className="chat-buttons-wrapper">
+          {chatButtons.map((text, index) => (
+            <button
+              className="chat-bubble-button"
+              key={index}
+              onClick={() => onChatButtonClick(text)}
+            >
+              {text}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div className="chat-input-bar">
+      <input
+        type="text"
+        placeholder="무엇이든 물어보세요"
+        value={inputText}
+        onChange={(e) => setInputText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleSend();
+        }}
+      />
+      <button className="chat-send-btn" onClick={handleSend}>
+        <img src={BlacksendIcon} alt="send" className="send-icon" />
+      </button>
+    </div>
+  </div>
+);
+
+// ▼▼▼ ChatBearOverlay Logic ▼▼▼
+const [inputText, setInputText] = useState('');
+const [chatHistory, setChatHistory] = useState([]);
+const [showChatButtons, setShowChatButtons] = useState(true);
+
+const onChatButtonClick = (text) => {
+  setInputText(text);
+  handleSend(text);
+};
+
+const handleSend = (forcedText) => {
+  const textToSend = forcedText || inputText;
+  if (!textToSend.trim()) return;
+
+  const newHistory = [...chatHistory, { role: 'user', text: textToSend }];
+  setChatHistory(newHistory);
+  setInputText('');
+  setShowChatButtons(false);
+
+  // AI 응답 흉내내기
+  setTimeout(() => {
+    const aiResponse = generateFakeResponse(textToSend);
+    setChatHistory((prev) => [...prev, { role: 'ai', text: aiResponse }]);
+  }, 500);
+};
+
+const generateFakeResponse = (question) => {
+  // 실제 AI 연결 전 임시 답변
+  return `"${question}"에 대한 임시 답변입니다.`;
+};
 
   return view === 'chat' ? renderChatOverlay() : renderListOverlay();
 }

@@ -17,7 +17,8 @@ const NovelDetail = () => {
     if (!novel) {
       (async () => {
         try {
-          const res = await instance.get(`/novels/${id}/episodes`);
+          const res = await instance.get(`/novels/${id}`);
+          console.log(res);
           setNovel(res.data);
         } catch (e) {
           setNovel(null);
@@ -26,7 +27,7 @@ const NovelDetail = () => {
         }
       })();
     }
-  }, [id, novel]);
+  }, []);
 
   if (loading) return <div>로딩중...</div>;
   if (!novel) return <div>해당 소설을 찾을 수 없습니다.</div>;

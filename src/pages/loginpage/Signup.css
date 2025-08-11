@@ -58,6 +58,18 @@
   background: #f2f2f2;
 }
 
+/* 기본 placeholder 스타일 */
+input::placeholder {
+  color: #aaa;
+  font-size: 0.7rem;
+}
+
+/* 에러 상태일 때 placeholder 빨간색 */
+input.error::placeholder {
+  color: red;
+}
+
+
 .signup-btn {
   width: 100%;
   padding: 0.6rem; /* 12px → 0.6rem */

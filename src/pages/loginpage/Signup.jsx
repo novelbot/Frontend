@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
+import { instance } from "../../API/api"; // Axios 인스턴스 (baseURL 등 사전설정)
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -9,22 +10,17 @@ function Signup() {
     confirmPassword: "",
     userNickname: "",
     userEmail: "",
-    userRole: "USER", // 기본값
+    userRole: "USER",
   });
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
-  // ✅ API 엔드포인트
-  const API_BASE = import.meta.env.VITE_BASE_URL;          // 예: https://api.novelbot.org
-  const SIGNUP_URL = `${API_BASE}/users`;                  // POST /users
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors((prev) => ({ ...prev, [e.target.name]: false }));
   };
 
-  // ✅ API POST 연결
   const handleSignup = async () => {
     // 1) 빈칸 검사
     const newErrors = {};
@@ -42,7 +38,7 @@ function Signup() {
       return;
     }
 
-    // 3) 페이로드 (API 스펙)
+    // 3) 페이로드
     const payload = {
       userName: formData.userName,
       userNickname: formData.userNickname,
@@ -52,27 +48,17 @@ function Signup() {
     };
 
     try {
-      const res = await fetch(SIGNUP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        // credentials: "include", // 쿠키 사용 시
-      });
-
-      if (!res.ok) {
-        let msg = "회원가입에 실패했습니다.";
-        try {
-          const data = await res.json();
-          if (data?.message) msg = data.message;
-        } catch {}
-        alert(msg);
-        return;
-      }
-
+      const { data } = await instance.post("/users", payload); // baseURL은 instance에 설정
+      console.log("회원가입 성공:", data);
       alert("회원가입이 완료되었습니다.");
       navigate("/login");
-    } catch (e) {
-      alert("네트워크 오류가 발생했습니다.");
+    } catch (err) {
+      console.error("회원가입 실패:", err);
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "회원가입에 실패했습니다.";
+      alert(msg);
     }
   };
 
@@ -150,10 +136,6 @@ function Signup() {
             className={errors.userEmail ? "error" : ""}
           />
         </div>
-
-        {/* (선택) 권한 */}
-        {/* 필요하면 select 등을 노출하고 변경 가능 */}
-        {/* <select name="userRole" value={formData.userRole} onChange={handleChange}>...</select> */}
 
         {/* 회원가입 버튼 */}
         <button className="signup-btn" onClick={handleSignup}>

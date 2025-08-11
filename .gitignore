@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+localhost+2-key.pem//깃이그노어에 추가
+localhost+2.pem

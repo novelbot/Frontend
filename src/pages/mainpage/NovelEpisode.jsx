@@ -10,9 +10,12 @@ const EPISODES_PER_BATCH = 4;
 function NovelEpisodeList({ episodes }) {
   return (
     <div className="episode-list">
-      {episodes.map((episode) => (
-        <div className="episode-card" key={episode.episodeId}>
-          <img src="/src/assets/default-thumbnail.png" alt="썸네일" />{" "}
+      {episodes.map((episode, index) => (
+        <div
+          className="episode-card"
+          key={episode.episodeId ?? `${episode.novelId}-${index}`}
+        >
+          <img src="/src/assets/default-thumbnail.png" alt="썸네일" />
           {/* 썸네일 정보가 없다면 기본 이미지 사용 */}
           <div className="episode-info">
             <p className="episode-date">{episode.publicationDate}</p>

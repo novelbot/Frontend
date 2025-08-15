@@ -26,11 +26,11 @@ function MyPage() {
   const [loading, setLoading] = useState(true);
 
   const [editData, setEditData] = useState({
-    username: "",        // 아이디
+    username: "", // 아이디
     password: "",
     confirmPassword: "",
-    nickname: "",        // 닉네임
-    email: "",           // 이메일
+    nickname: "", // 닉네임
+    email: "", // 이메일
   });
 
   // 1) 마운트 시 토큰으로 유저 정보 세팅
@@ -51,7 +51,6 @@ function MyPage() {
     // 서버가 없다면 (또는 아직 준비되지 않았다면) JWT의 sub로 아이디만 채웁니다.
     (async () => {
       try {
-
         setEditData((prev) => ({
           ...prev,
           username: sub || "unknown",
@@ -89,45 +88,43 @@ function MyPage() {
   // ▼ MyPage.jsx 중 handleLogout 만 교체
   // MyPage.jsx - handleLogout 교체
   // MyPage.jsx - handleLogout 교체
-const handleLogout = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("이미 로그아웃된 상태입니다.");
-    navigate("/");
-    return;
-  }
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("이미 로그아웃된 상태입니다.");
+      navigate("/");
+      return;
+    }
 
-  // 사용자별 아바타 색상 키 제거용
-  const decoded = decodeJwt(token);
-  const sub = decoded?.sub ? String(decoded.sub) : null;
-  const colorKey = sub ? `avatarBgColor_${sub}` : null;
+    // 사용자별 아바타 색상 키 제거용
+    const decoded = decodeJwt(token);
+    const sub = decoded?.sub ? String(decoded.sub) : null;
+    const colorKey = sub ? `avatarBgColor_${sub}` : null;
 
-  try {
-    // 1) 바디·헤더 없이 query string 으로만 전송 (문서 요구사항)
-    await instance.post("/auth/logout", null, {
-      params: { token: encodeURIComponent(token) },
-      // 헤더 절대 넣지 않음: Authorization / Content-Type 등 제거
-      headers: {},
-    });
+    try {
+      // 1) 바디·헤더 없이 query string 으로만 전송 (문서 요구사항)
+      await instance.post("/auth/logout", null, {
+        params: { token: encodeURIComponent(token) },
+        // 헤더 절대 넣지 않음: Authorization / Content-Type 등 제거
+        headers: {},
+      });
 
-    if (colorKey) localStorage.removeItem(colorKey);
-    localStorage.removeItem("token");
-    window.dispatchEvent(new Event("authChanged"));
-    alert("로그아웃 완료");
-    navigate("/");
-  } catch (err) {
-    console.error("로그아웃 실패:", err?.response?.data || err?.message);
+      if (colorKey) localStorage.removeItem(colorKey);
+      localStorage.removeItem("token");
+      window.dispatchEvent(new Event("authChanged"));
+      alert("로그아웃 완료");
+      navigate("/");
+    } catch (err) {
+      console.error("로그아웃 실패:", err?.response?.data || err?.message);
 
-    // 서버 오류여도 로컬 세션 정리
-    if (colorKey) localStorage.removeItem(colorKey);
-    localStorage.removeItem("token");
-    window.dispatchEvent(new Event("authChanged"));
-    alert("서버 오류가 있었지만, 로컬 세션은 종료했습니다.");
-    navigate("/");
-  }
-};
-
-
+      // 서버 오류여도 로컬 세션 정리
+      if (colorKey) localStorage.removeItem(colorKey);
+      localStorage.removeItem("token");
+      window.dispatchEvent(new Event("authChanged"));
+      alert("서버 오류가 있었지만, 로컬 세션은 종료했습니다.");
+      navigate("/");
+    }
+  };
 
   const handleWithdraw = () => {
     console.log("서비스 탈퇴");

@@ -1,18 +1,30 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';  // 추가
-import './BearIcon.css';
-import bearDown from '../assets/bear_down.png';
-import bearUp from '../assets/bear_up.png';
-import BearOverlay from './BearOverlay';
-import ChatBearOverlay from './ChatBearOverlay';  // Chat 전용 오버레이
+import { useState } from "react";
+import { useLocation } from "react-router-dom"; // 추가
+import "./BearIcon.css";
+import bearDown from "../assets/bear_down.png";
+import bearUp from "../assets/bear_up.png";
+import BearOverlay from "./BearOverlay";
+import ChatBearOverlay from "./ChatBearOverlay"; // Chat 전용 오버레이
 
-function BearIcon({isOpen,setIsOpen}) {
-
+function BearIcon({ isOpen, setIsOpen }) {
   const location = useLocation(); // 현재 경로 가져오기
-  const isViewerPage = location.pathname.startsWith('/viewer/');
+  const isViewerPage = location.pathname.startsWith("/viewer/");
+
+  const [overlayType, setOverlayType] = useState("bear"); // "bear" | "chat"
+  const [selectedNovelId, setSelectedNovelId] = useState(null);
 
   const toggleOverlay = () => {
-    setIsOpen(prev => !prev);
+    if (isOpen) {
+      // 닫을 때 초기화
+      setOverlayType("bear");
+      setSelectedNovelId(null);
+    }
+    setIsOpen((prev) => !prev);
+  };
+
+  const openChatOverlay = (novelId) => {
+    setSelectedNovelId(novelId);
+    setOverlayType("chat");
   };
 
   return (
@@ -22,20 +34,24 @@ function BearIcon({isOpen,setIsOpen}) {
 
         {/* 오버레이 닫혀있을 때만 말풍선 표시 (viewer 페이지는 제외) */}
         {!isViewerPage && (
-          <div className={`bear-tooltip ${isOpen ? 'disabled' : ''}`}>
+          <div className={`bear-tooltip ${isOpen ? "disabled" : ""}`}>
             회원가입 후 곰과 대화해 보세요!
           </div>
         )}
       </div>
 
       {/* 오버레이 열렸을 때 컴포넌트 분기 */}
-      {isOpen && (
-        isViewerPage ? (
-          <ChatBearOverlay onClose={toggleOverlay} />
+      {isOpen &&
+        (isViewerPage ? (
+          <ChatBearOverlay novelId={selectedNovelId} onClose={toggleOverlay} />
+        ) : overlayType === "chat" ? (
+          <ChatBearOverlay novelId={selectedNovelId} onClose={toggleOverlay} />
         ) : (
-          <BearOverlay onClose={toggleOverlay} />
-        )
-      )}
+          <BearOverlay
+            onClose={toggleOverlay}
+            onSelectNovel={openChatOverlay}
+          />
+        ))}
     </>
   );
 }

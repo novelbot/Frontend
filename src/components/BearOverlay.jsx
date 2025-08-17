@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import folderIcon from "../assets/folder.png"; // 작품 아이템에 사용할 폴더 아이콘
 import messageIcon from "../assets/message.png"; // 하단 버튼에 사용할 메시지 아이콘
 
-function BearOverlay() {
+function BearOverlay({ onSelectNovel }) {
   const [novelsChat, setNovelsChat] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +62,11 @@ function BearOverlay() {
 
       <div className="scrollable-work-list">
         {novelsChat.map((novel) => (
-          <div className="work-item" key={novel.novelId}>
+          <div
+            className="work-item"
+            key={novel.novelId}
+            onClick={() => onSelectNovel(novel.novelId)}
+          >
             <img src={folderIcon} alt="folder" className="folder-icon" />
             <span>{novel.title}</span>
           </div>

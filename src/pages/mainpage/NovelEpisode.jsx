@@ -35,7 +35,10 @@ function NovelEpisodeList({
             className="episode-card"
             key={episode.episodeId ?? `${episode.novelId}-${index}`}
           >
-            <img src={novel.coverImageUrl} alt={`${novel.title} 표지`} />
+            {novel.coverImageUrl && (
+              <img src={novel.coverImageUrl} alt={`${novel.title} 표지`} />
+            )}
+
 
             <div className="episode-info">
               <p className="episode-date">{episode.publicationDate}</p>
@@ -57,8 +60,8 @@ function NovelEpisodeList({
                 {purchasingId === episode.episodeId
                   ? "처리 중..."
                   : isPurchased
-                  ? "구매완료"
-                  : "무료"}
+                    ? "구매완료"
+                    : "무료"}
               </button>
             </div>
           </div>

@@ -6,6 +6,9 @@ import "./NovelList.css"; // 스타일은 그대로 사용
 const NovelCard = ({ novel }) => {
   const navigate = useNavigate();
 
+  console.log("NovelCard novel:", novel);
+  console.log("coverImageUrl:", novel.coverImageUrl);
+
   const handleClick = () => {
     navigate(`/MainPage/${novel.novelId}`, {
       state: { novel }, // novel 객체를 상태로 전달
@@ -15,11 +18,14 @@ const NovelCard = ({ novel }) => {
   return (
     <div className="novel-card" onClick={handleClick}>
       {/* coverImageUrl 사용 */}
-      <img
-        src={novel.coverImageUrl}
-        alt={novel.title}
-        className="novel-image"
-      />
+      {novel.coverImageUrl && (
+        <img
+          src={novel.coverImageUrl}
+          alt={novel.title}
+          className="novel-image"
+        />
+      )}
+
       <div className="novel-overlay">
         <h4>{novel.title}</h4>
         <p>

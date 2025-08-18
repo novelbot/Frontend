@@ -8,11 +8,11 @@
 
 /* 에피소드 섹션 제목 */
 .episode-title {
-  color: black;
+  color: black !important;
   font-size: 1rem;                        /* 20px → 1rem */
   font-weight: bold;
   margin-top: 0;
-  margin-bottom: 0.5rem;                 /* 10px → 0.5rem */
+  margin-bottom: 0.5rem !important;                 /* 10px → 0.5rem */
   text-align: left !important;
 }
 

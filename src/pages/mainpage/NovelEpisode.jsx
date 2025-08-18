@@ -7,7 +7,25 @@ import { instance } from "/src/API/api";
 
 const EPISODES_PER_BATCH = 4;
 
-function NovelEpisodeList({ episodes, novel, onPurchase, purchasingId, purchasedEpisodes }) {
+// 토큰을 안전하게 읽어오는 유틸
+const getStoredToken = () => {
+  const raw =
+    localStorage.getItem("accessToken") ??
+    localStorage.getItem("token") ??
+    sessionStorage.getItem("accessToken") ??
+    sessionStorage.getItem("token");
+
+  // 'Bearer '로 저장되어 있으면 제거
+  return raw?.replace(/^Bearer\s+/i, "") ?? null;
+};
+
+function NovelEpisodeList({
+  episodes,
+  novel,
+  onPurchase,
+  purchasingId,
+  purchasedEpisodes,
+}) {
   return (
     <div className="episode-list">
       {episodes.map((episode, index) => {
@@ -32,7 +50,7 @@ function NovelEpisodeList({ episodes, novel, onPurchase, purchasingId, purchased
                 disabled={purchasingId === episode.episodeId}
                 style={{
                   backgroundColor: isPurchased ? "#EEEEEE" : "#FFFFFF",
-                  color: "#000", // 글자색은 검정 유지
+                  color: "#000",
                   border: "1px solid #ccc",
                 }}
               >
@@ -80,7 +98,8 @@ const NovelEpisode = ({ novel }) => {
   );
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount);
 
-  const handleLoadMore = () => setVisibleCount(prev => prev + EPISODES_PER_BATCH);
+  const handleLoadMore = () =>
+    setVisibleCount((prev) => prev + EPISODES_PER_BATCH);
 
   const handleSortChange = (order) => {
     setSortOrder(order);
@@ -91,29 +110,32 @@ const NovelEpisode = ({ novel }) => {
     try {
       setPurchasingId(episode.episodeId);
 
-      const token = localStorage.getItem("accessToken");
+      const token = getStoredToken();
+      console.log("accessToken:", token);
+
+      if (!token) {
+        alert("인증 정보가 없습니다. 로그인 후 다시 시도해 주세요.");
+        return;
+      }
+
       await instance.post(
-        `/purchase`,
+        "/purchase",
         {
           episodeId: episode.episodeId,
           novelId: episode.novelId,
-          isPurchased: true,
+          ispurchased: true,
         },
         {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // 구매 성공 시 상태에 반영
       setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
-
-      // 바로 뷰어로 이동
       navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
     } catch (err) {
       const status = err?.response?.status;
 
       if (status === 409) {
-        // 이미 구매한 경우도 버튼 색 변경
         setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
         navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
         return;

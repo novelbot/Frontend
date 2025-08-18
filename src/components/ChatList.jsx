@@ -31,12 +31,14 @@ function ChatList({ novelId, onEnterChat }) {
     const fetchChatList = async () => {
       try {
         const res = await instance.get(`/chatrooms/novel/${novelId}`, {
-          params: { novleId: novelId },
+          params: { novelId: novelId },
         });
         if (Array.isArray(res.data)) {
-          // chatTitle만 뽑아서 listItems로 저장
-          const titles = res.data.map((item) => item.chatTitle);
-          setListItems(titles);
+          const chats = res.data.map((item) => ({
+            id: item.chatId, // 백엔드에서 오는 chatId
+            title: item.chatTitle, // 백엔드에서 오는 chatTitle
+          }));
+          setListItems(chats);
         } else {
           setListItems([]);
         }
@@ -66,14 +68,14 @@ function ChatList({ novelId, onEnterChat }) {
         <SearchBar placeholder="작품 검색" />
       </div>
       <div className="scrollable-work-list">
-        {listItems.map((title, index) => (
+        {listItems.map((item) => (
           <div
             className="work-item"
-            key={index}
-            onClick={() => onEnterChat(title)} // 클릭 시 채팅방으로 전환
+            key={item.id}
+            onClick={() => onEnterChat(item.id, item.title)} // 클릭 시 채팅방으로 전환
           >
             <img src={messageIcon} alt="message" className="folder-icon" />
-            <span>{title}</span>
+            <span>{item.title}</span>
           </div>
         ))}
       </div>

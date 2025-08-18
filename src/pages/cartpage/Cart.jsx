@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Cart.css";
-import cover1 from "/src/data/01_젊은 느티나무 표지.png";
-import cover2 from "/src/data/02_백치 아다다 표지.png";
-import cover3 from "/src/data/03_카프카를 읽는 밤 표지.png";
-import cover4 from "/src/data/04_강아지똥 표지.png";
-import cover5 from "/src/data/05_등신불 표지.png";
-import cover6 from "/src/data/06_바위 표지.png";
-import cover7 from "/src/data/25_먼길 표지.png";
+import cover1 from "../cartpage/01_젊은 느티나무 표지.png";
 import downIcon from "/src/assets/down.png";
 
 // 보여줄 개수 단위
@@ -24,58 +18,58 @@ const sampleCart = [
     cover: cover1,
   },
   {
-    id: 2,
-    title: "백치 아다다",
-    author: "계용묵",
-    genre: "단편 소설",
-    lastUpdate: "2018.06.27(완결)",
-    startDate: "2014.01.17",
-    cover: cover2,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
   {
-    id: 3,
-    title: "카프카를 읽는 밤",
-    author: "구효서",
-    genre: "현대문학, 심리소설, 로맨스",
-    lastUpdate: "2022.11.05(완결)",
-    startDate: "2021.09.12",
-    cover: cover3,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
   {
-    id: 4,
-    title: "강아지 똥",
-    author: "권정생",
-    genre: "동화",
-    lastUpdate: "2015.03.10(완결)",
-    startDate: "2014.12.25",
-    cover: cover4,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
   {
-    id: 5,
-    title: "등신불(等身佛)",
-    author: "김동리",
-    genre: "현대 단편 소설, 사실주의, 비극",
-    lastUpdate: "2017.09.18(완결)",
-    startDate: "2017.08.01",
-    cover: cover5,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
   {
-    id: 6,
-    title: "바위",
-    author: "김동리",
-    genre: "현대 단편 소설, 사실주의, 비극",
-    lastUpdate: "2019.05.30(완결)",
-    startDate: "2019.03.27",
-    cover: cover6,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
   {
-    id: 7,
-    title: "먼 길",
-    author: "김인숙",
-    genre: "일상, 드라마",
-    lastUpdate: "2024.06.10(완결)",
-    startDate: "2024.04.15",
-    cover: cover7,
+    id: 1,
+    title: "젊은 느티나무",
+    author: "강신재",
+    genre: "멜로, 청춘",
+    lastUpdate: "2025.07.03(최신화 업데이트 완료)",
+    startDate: "2025.06.28",
+    cover: cover1,
   },
 ];
 

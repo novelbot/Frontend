@@ -5,10 +5,12 @@ import "./ChatBearOverlay.css";
 
 function ChatBearOverlay({ novelId }) {
   const [view, setView] = useState("list"); // "list" | "chat"
-  const [chatTitle, setChatTitle] = useState("대화 제목 어쩌고 ...");
+  const [chatTitle, setChatTitle] = useState("새로운 채팅");
+  const [chatId, setChatId] = useState(null);
 
-  const handleEnterChat = (title) => {
+  const handleEnterChat = (chatId, title) => {
     setChatTitle(title);
+    setChatId(chatId);
     setView("chat");
   };
 
@@ -24,6 +26,7 @@ function ChatBearOverlay({ novelId }) {
         <ChatRoom
           novelId={novelId}
           chatTitle={chatTitle}
+          chatId={chatId}
           onBack={handleBackToList}
         />
       )}

@@ -1,16 +1,17 @@
+// pages/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { instance } from "../../API/api"; // Axios 인스턴스
 import "./Login.css";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!id.trim() || !password.trim()) {
       window.alert("아이디와 비밀번호를 입력해주세요");
       return;
     }
@@ -19,19 +20,22 @@ function Login() {
 
     try {
       const res = await instance.post("/auth/login", {
-        username: email, // API 스펙상 username 사용
+        username: id, // API 스펙상 username 사용
         password,
       });
 
-      // 성공
       if (res?.data?.token) {
         localStorage.setItem("token", res.data.token);
+
+        // 헤더가 즉시 반응하도록 알림 이벤트 발행
+        window.dispatchEvent(new Event("authChanged"));
+
+        // 로그인 성공 시 페이지 이동 (원하는 경로로 변경 가능)
+        navigate("/"); // 예: navigate("/novellist");
+      } else {
+        window.alert("로그인에 실패했습니다");
       }
-      navigate("/"); // 로그인 성공 시 페이지 이동
-      const token = window.localStorage.getItem("token");
-      console.log(token);
     } catch (err) {
-      // Axios 에러 응답 처리
       if (err.response) {
         if (err.response.status === 404) {
           window.alert("아이디가 존재하지 않습니다");
@@ -54,10 +58,10 @@ function Login() {
 
       <div className="login-box">
         <input
-          type="email"
-          placeholder="이메일을 입력해주세요"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="아이디를 입력해주세요"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
           autoComplete="username"
         />
         <input
@@ -66,6 +70,9 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleLogin();
+          }}
         />
 
         <button className="login-btn" onClick={handleLogin} disabled={loading}>

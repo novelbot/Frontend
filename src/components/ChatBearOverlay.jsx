@@ -3,7 +3,7 @@ import ChatList from "./ChatList";
 import ChatRoom from "./ChatRoom";
 import "./ChatBearOverlay.css";
 
-function ChatBearOverlay({ novelId }) {
+function ChatBearOverlay({ novelId, onClose }) {
   const [view, setView] = useState("list"); // "list" | "chat"
   const [chatTitle, setChatTitle] = useState("새로운 채팅");
   const [chatId, setChatId] = useState(null);
@@ -18,10 +18,20 @@ function ChatBearOverlay({ novelId }) {
     setView("list");
   };
 
+  const handleBackToNovel = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
     <>
       {view === "list" ? (
-        <ChatList novelId={novelId} onEnterChat={handleEnterChat} />
+        <ChatList
+          novelId={novelId}
+          onEnterChat={handleEnterChat}
+          onBack={handleBackToNovel}
+        />
       ) : (
         <ChatRoom
           novelId={novelId}

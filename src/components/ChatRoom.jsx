@@ -109,7 +109,7 @@ function ChatRoom({ novelId, chatTitle, chatId, onBack }) {
           <img
             src={backIcon}
             alt="back"
-            className="chat-icon"
+            className="back-icon"
             onClick={onBack}
             style={{ cursor: "pointer" }}
           />

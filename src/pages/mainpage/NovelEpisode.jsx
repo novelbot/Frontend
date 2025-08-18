@@ -1,35 +1,51 @@
 // NovelEpisode.jsx
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./NovelEpisode.css";
 import downIcon from "/src/assets/down.png";
 import { instance } from "/src/API/api";
 
 const EPISODES_PER_BATCH = 4;
 
-function NovelEpisodeList({ episodes, novel }) {
+function NovelEpisodeList({ episodes, novel, onPurchase, purchasingId, purchasedEpisodes }) {
   return (
     <div className="episode-list">
-      {episodes.map((episode, index) => (
-        <div
-          className="episode-card"
-          key={episode.episodeId ?? `${episode.novelId}-${index}`}
-        >
-          {/* 모든 에피소드에 소설 전체 coverImageUrl 표시 */}
-          <img src={novel.coverImageUrl} alt={`${novel.title} 표지`} />
+      {episodes.map((episode, index) => {
+        const isPurchased = purchasedEpisodes.includes(episode.episodeId);
+        return (
+          <div
+            className="episode-card"
+            key={episode.episodeId ?? `${episode.novelId}-${index}`}
+          >
+            <img src={novel.coverImageUrl} alt={`${novel.title} 표지`} />
 
-          <div className="episode-info">
-            <p className="episode-date">{episode.publicationDate}</p>
-            <p className="episode-title-text">{episode.episodeTitle}</p>
+            <div className="episode-info">
+              <p className="episode-date">{episode.publicationDate}</p>
+              <p className="episode-title-text">{episode.episodeTitle}</p>
+            </div>
+
+            <div className="episode-meta">
+              <span>{episode.episodeNumber}화</span>
+              <button
+                className="free-badge"
+                onClick={() => onPurchase(episode)}
+                disabled={purchasingId === episode.episodeId}
+                style={{
+                  backgroundColor: isPurchased ? "#EEEEEE" : "#FFFFFF",
+                  color: "#000", // 글자색은 검정 유지
+                  border: "1px solid #ccc",
+                }}
+              >
+                {purchasingId === episode.episodeId
+                  ? "처리 중..."
+                  : isPurchased
+                  ? "구매완료"
+                  : "무료"}
+              </button>
+            </div>
           </div>
-          <div className="episode-meta">
-            <span>{episode.episodeNumber}화</span>
-            <Link to={`/viewer/${episode.novelId}/${episode.episodeNumber}`}>
-              <button className="free-badge">무료</button>
-            </Link>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -38,6 +54,9 @@ const NovelEpisode = ({ novel }) => {
   const [episodes, setEpisodes] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [visibleCount, setVisibleCount] = useState(EPISODES_PER_BATCH);
+  const [purchasingId, setPurchasingId] = useState(null);
+  const [purchasedEpisodes, setPurchasedEpisodes] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -49,9 +68,7 @@ const NovelEpisode = ({ novel }) => {
       }
     };
 
-    if (novel?.novelId) {
-      fetchEpisodes();
-    }
+    if (novel?.novelId) fetchEpisodes();
   }, [novel?.novelId]);
 
   if (!novel) return <div>오류 발생</div>;
@@ -63,13 +80,57 @@ const NovelEpisode = ({ novel }) => {
   );
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount);
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + EPISODES_PER_BATCH);
-  };
+  const handleLoadMore = () => setVisibleCount(prev => prev + EPISODES_PER_BATCH);
 
   const handleSortChange = (order) => {
     setSortOrder(order);
     setVisibleCount(EPISODES_PER_BATCH);
+  };
+
+  const handlePurchase = async (episode) => {
+    try {
+      setPurchasingId(episode.episodeId);
+
+      const token = localStorage.getItem("accessToken");
+      await instance.post(
+        `/purchase`,
+        {
+          episodeId: episode.episodeId,
+          novelId: episode.novelId,
+          isPurchased: true,
+        },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        }
+      );
+
+      // 구매 성공 시 상태에 반영
+      setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
+
+      // 바로 뷰어로 이동
+      navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
+    } catch (err) {
+      const status = err?.response?.status;
+
+      if (status === 409) {
+        // 이미 구매한 경우도 버튼 색 변경
+        setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
+        navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
+        return;
+      }
+      if (status === 401) {
+        alert("인증이 필요합니다. 로그인 후 다시 시도해 주세요.");
+      } else if (status === 404) {
+        alert("에피소드를 찾을 수 없습니다.");
+      } else if (status === 400) {
+        alert("잘못된 요청입니다. 잠시 후 다시 시도해 주세요.");
+      } else {
+        alert("구매 처리 중 오류가 발생했습니다.");
+      }
+      console.error("구매 실패:", err);
+    } finally {
+      setPurchasingId(null);
+    }
   };
 
   return (
@@ -93,7 +154,13 @@ const NovelEpisode = ({ novel }) => {
 
       <p className="episode-count">전체 {episodes.length}화</p>
 
-      <NovelEpisodeList episodes={visibleEpisodes} novel={novel} />
+      <NovelEpisodeList
+        episodes={visibleEpisodes}
+        novel={novel}
+        onPurchase={handlePurchase}
+        purchasingId={purchasingId}
+        purchasedEpisodes={purchasedEpisodes}
+      />
 
       {visibleCount < episodes.length && (
         <div className="load-more-wrapper">

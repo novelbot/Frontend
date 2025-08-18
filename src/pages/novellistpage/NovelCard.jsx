@@ -14,7 +14,12 @@ const NovelCard = ({ novel }) => {
 
   return (
     <div className="novel-card" onClick={handleClick}>
-      <img src={novel.imageUrl} alt={novel.title} className="novel-image" />
+      {/* coverImageUrl 사용 */}
+      <img
+        src={novel.coverImageUrl}
+        alt={novel.title}
+        className="novel-image"
+      />
       <div className="novel-overlay">
         <h4>{novel.title}</h4>
         <p>

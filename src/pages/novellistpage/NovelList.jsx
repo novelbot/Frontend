@@ -26,34 +26,3 @@ const NovelList = ({ novelList = [] }) => {
 };
 
 export default NovelList;
-
-// const NovelList = () => {
-// const [novelList, setNovelList] = useState([]);
-
-// useEffect(() => {
-//   const getNovelList = async () => {
-//     try {
-//       const res = await instance.get("/novels");
-//       const data = res.data;
-//       setNovelList(data); // 상태에 저장
-//     } catch (err) {
-//       console.error("소설 목록 불러오기 실패:", err);
-//     }
-//   };
-
-//   getNovelList();
-// }, []);
-
-//   return (
-//     <div className="novel-list-container">
-//       <h3>웹소설</h3>
-//       <div className="novel-grid">
-//         {novelList.map((novel) => (
-//           <NovelCard key={novel.novelId} novel={novel} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default NovelList;

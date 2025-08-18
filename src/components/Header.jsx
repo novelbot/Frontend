@@ -1,69 +1,68 @@
-// components/Header.jsx
+// src/components/Header.jsx
 import "./Header.css";
 import userIcon from "../assets/user.png";
 import down from "../assets/down.png";
 import SearchBar from "./SearchBar";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
+import { instance } from "../API/api"; // ✅ axios 인스턴스 사용
 
-// JWT(Base64URL) 디코더
-function decodeJwt(token) {
-  try {
-    const payload = token.split(".")[1];
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
+// 토큰 포맷터
+function getBearer() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  return token.startsWith("Bearer ") ? token : `Bearer ${token}`;
 }
 
 function Header({ onSearchResults }) {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null); // ✅ 서버에서 받은 사용자 정보 {userName, userNickname, userEmail}
   const [avatarBg, setAvatarBg] = useState("#D6E6FF");
 
-  // 토큰 → 상태 동기화 함수 (초기/이벤트 시 모두 사용)
-  const syncAuth = useCallback(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+  // ✅ 토큰 존재 여부 + /users/user 호출로 상태 동기화
+  const syncAuth = useCallback(async () => {
+    const b = getBearer();
+    if (!b) {
       setIsLoggedIn(false);
-      setUser(null);
+      setProfile(null);
       return;
     }
 
-    const decoded = decodeJwt(token);
-    if (!decoded || (decoded.exp && decoded.exp * 1000 <= Date.now())) {
+    try {
+      const res = await instance.get("/users/user", {
+        headers: { Authorization: b },
+      });
+      const data = res?.data ?? {};
+      const filled = {
+        userName: data.userName ?? "",
+        userNickname: data.userNickname ?? "",
+        userEmail: data.userEmail ?? "",
+      };
+
+      setIsLoggedIn(true);
+      setProfile(filled);
+
+      // 아바타 색상: 사용자 식별자로 고정
+      const keyId = filled.userName || filled.userNickname || "unknown";
+      const colorKey = `avatarBgColor_${keyId}`;
+      const colors = [
+        "#F6D6D6", "#FDE2B9", "#FFF1B6",
+        "#D7F3E3", "#D6E6FF", "#E7D6FF", "#FFDFEF",
+      ];
+      const saved = localStorage.getItem(colorKey);
+      if (saved) {
+        setAvatarBg(saved);
+      } else {
+        const newColor = colors[Math.floor(Math.random() * colors.length)];
+        setAvatarBg(newColor);
+        localStorage.setItem(colorKey, newColor);
+      }
+    } catch (err) {
+      // 401/403 등: 토큰 제거 후 비로그인 처리
       localStorage.removeItem("token");
       setIsLoggedIn(false);
-      setUser(null);
-      return;
-    }
-
-    setIsLoggedIn(true);
-    setUser(decoded);
-
-    const colors = [
-      "#F6D6D6", "#FDE2B9", "#FFF1B6",
-      "#D7F3E3", "#D6E6FF", "#E7D6FF", "#FFDFEF",
-    ];
-
-    // 사용자별 색상 키
-    const colorKey = `avatarBgColor_${decoded.sub}`;
-    const savedColor = localStorage.getItem(colorKey);
-
-    if (savedColor) {
-      setAvatarBg(savedColor);
-    } else {
-      const newColor = colors[Math.floor(Math.random() * colors.length)];
-      setAvatarBg(newColor);
-      localStorage.setItem(colorKey, newColor);
+      setProfile(null);
     }
   }, []);
 
@@ -71,13 +70,14 @@ function Header({ onSearchResults }) {
     // 초기 1회
     syncAuth();
 
-    // 로그인/로그아웃 시 커스텀 이벤트로 동기화
-    const handleAuthChanged = () => syncAuth();
+    // 로그인/로그아웃/토큰갱신 시 커스텀 이벤트로 동기화
+    const handleAuthChanged = () => { syncAuth(); };
     window.addEventListener("authChanged", handleAuthChanged);
 
-    // 다른 탭/창에서 localStorage가 바뀌었을 때도 반영
+    // 다른 탭/창에서 토큰 변경 시 동기화
     const handleStorage = (e) => {
-      if (e.key && e.key.startsWith("token")) syncAuth();
+      if (!e.key || e.key !== "token") return;
+      syncAuth();
     };
     window.addEventListener("storage", handleStorage);
 
@@ -86,6 +86,12 @@ function Header({ onSearchResults }) {
       window.removeEventListener("storage", handleStorage);
     };
   }, [syncAuth]);
+
+  const nickname = profile?.userNickname || "";
+  const displayInitial =
+    nickname?.trim()?.charAt(0)?.toUpperCase() ||
+    profile?.userName?.trim()?.charAt(0)?.toUpperCase() ||
+    "U";
 
   return (
     <header className="header">
@@ -104,10 +110,10 @@ function Header({ onSearchResults }) {
                 className="user-avatar"
                 style={{ backgroundColor: avatarBg }}
               >
-                {user?.sub ? user.sub.charAt(0).toUpperCase() : "U"}
+                {displayInitial}
               </div>
               <span style={{ marginRight: 8 }}>
-                {user?.sub ? `${user.sub}` : "사용자"}님 <br />환영합니다!
+                {nickname ? `${nickname}` : "사용자"}님 <br />환영합니다!
               </span>
               <Link to="/mypage">
                 <img src={down} alt="down" style={{ width: 18, height: 18 }} />

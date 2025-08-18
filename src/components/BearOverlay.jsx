@@ -3,11 +3,12 @@ import { instance } from "../API/api";
 import "./BearOverlay.css";
 import SearchBar from "./SearchBar";
 import folderIcon from "../assets/folder.png"; // 작품 아이템에 사용할 폴더 아이콘
-import messageIcon from "../assets/message.png"; // 하단 버튼에 사용할 메시지 아이콘
+import ChatBearOverlay from "./ChatBearOverlay";
 
 function BearOverlay({ onSelectNovel }) {
   const [novelsChat, setNovelsChat] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedNovelId, setSelectedNovelId] = useState(null);
 
   // 인터셉터 등록 (한 번만)
   useEffect(() => {
@@ -46,6 +47,15 @@ function BearOverlay({ onSelectNovel }) {
     fetchNovels();
   }, []);
 
+  if (selectedNovelId) {
+    return (
+      <ChatBearOverlay
+        novelId={selectedNovelId}
+        onClose={() => setSelectedNovelId(null)}
+      />
+    );
+  }
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -71,12 +81,6 @@ function BearOverlay({ onSelectNovel }) {
             <span>{novel.title}</span>
           </div>
         ))}
-      </div>
-
-      <div className="message-button-area">
-        <button className="message-button">
-          <img src={messageIcon} alt="message" className="message-icon" />
-        </button>
       </div>
     </div>
   );

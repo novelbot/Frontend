@@ -25,10 +25,22 @@
 .chat-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   font-weight: bold;
+}
+
+.chat-header .back-icon {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  position: absolute;
+  left: 0.5rem; /* 왼쪽 여백 */
+  /* top: 50%; */
+  padding: 0.5rem 0.75rem;
+  /* transform: translateY(-50%); */
 }
 
 .chat-icon {
@@ -52,7 +64,6 @@
   overflow-x: auto; /* ✅ 세로 스크롤 활성화 */
 }
 
-
 /* 버튼을 <button>으로 바꿨으므로 스타일 분리 */
 .chat-bubble-button {
   background-color: white;
@@ -68,7 +79,6 @@
 .chat-bubble-button:hover {
   background-color: #f0f0f0;
 }
-
 
 /* 하단 입력창 */
 .chat-input-bar {
@@ -117,13 +127,13 @@
 
 .chat-bubble-user {
   align-self: flex-end;
-  background-color: #DCF8C6;
+  background-color: #dcf8c6;
   text-align: right;
 }
 
 .chat-bubble-ai {
   align-self: flex-start;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   text-align: left;
 }
 

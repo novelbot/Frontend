@@ -12,6 +12,18 @@ function Viewer({ bearOpen }) {
   const [loading, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(0);
 
+  // ✅ novelId와 episodeNumber localStorage 저장/삭제
+  useEffect(() => {
+    localStorage.setItem("novelId", novelId);
+    localStorage.setItem("episodeNumber", episodeNumber);
+
+    return () => {
+      // 컴포넌트 언마운트 시 삭제
+      localStorage.removeItem("novelId");
+      localStorage.removeItem("episodeNumber");
+    };
+  }, [novelId, episodeNumber]);
+
   // 데이터 fetch
   useEffect(() => {
     async function fetchEpisode() {

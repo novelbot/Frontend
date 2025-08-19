@@ -3,7 +3,6 @@ import backIcon from "../assets/back.png";
 import "./ChatBearOverlay.css";
 import { instance } from "../API/api";
 import { useState, useEffect } from "react";
-// import messageIcon from "../assets/message.png"; // 하단 버튼에 사용할 메시지 아이콘
 
 function ChatList({ novelId, onEnterChat, onBack }) {
   const [listItems, setListItems] = useState([]);
@@ -29,7 +28,7 @@ function ChatList({ novelId, onEnterChat, onBack }) {
   }, []);
 
   useEffect(() => {
-    const fetchChatList = async () => {
+    const fetchChatList = async (novelId) => {
       try {
         const res = await instance.get(`/chatrooms/novel/${novelId}`, {
           params: { novelId: novelId },
@@ -52,7 +51,10 @@ function ChatList({ novelId, onEnterChat, onBack }) {
     };
 
     if (novelId) {
-      fetchChatList();
+      fetchChatList(novelId);
+    } else {
+      const novelId = parseInt(localStorage.getItem("novelId"), 10);
+      fetchChatList(novelId);
     }
   }, [novelId]); // novelId 바뀔 때마다 재호출
 

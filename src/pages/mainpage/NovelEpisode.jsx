@@ -1,5 +1,5 @@
 // NovelEpisode.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "./NovelEpisode.css";
 import downIcon from "/src/assets/down.png";
@@ -7,29 +7,42 @@ import { instance } from "/src/API/api";
 
 const EPISODES_PER_BATCH = 4;
 
-// 토큰을 안전하게 읽어오는 유틸
+// 토큰 유틸
 const getStoredToken = () => {
   const raw =
     localStorage.getItem("accessToken") ??
     localStorage.getItem("token") ??
     sessionStorage.getItem("accessToken") ??
     sessionStorage.getItem("token");
-
-  // 'Bearer '로 저장되어 있으면 제거
   return raw?.replace(/^Bearer\s+/i, "") ?? null;
 };
+
+// ✅ episodeId 정규화(문자열)
+const idOf = (id) => (id == null ? "" : String(id));
 
 function NovelEpisodeList({
   episodes,
   novel,
   onPurchase,
   purchasingId,
-  purchasedEpisodes,
+  purchasedEpisodes, // 문자열 배열
 }) {
+  // 디버그: 렌더링 시 각 카드의 구매 여부 확인
+  useEffect(() => {
+    try {
+      const dbg = episodes.map((ep) => ({
+        episodeId: ep.episodeId,
+        type: typeof ep.episodeId,
+        isPurchased: purchasedEpisodes.includes(idOf(ep.episodeId)),
+      }));
+      console.table(dbg); // ✅ 각 에피소드별 구매 여부 표로 확인
+    } catch {}
+  }, [episodes, purchasedEpisodes]);
+
   return (
     <div className="episode-list">
       {episodes.map((episode, index) => {
-        const isPurchased = purchasedEpisodes.includes(episode.episodeId);
+        const isPurchased = purchasedEpisodes.includes(idOf(episode.episodeId));
         return (
           <div
             className="episode-card"
@@ -38,7 +51,6 @@ function NovelEpisodeList({
             {novel.coverImageUrl && (
               <img src={novel.coverImageUrl} alt={`${novel.title} 표지`} />
             )}
-
 
             <div className="episode-info">
               <p className="episode-date">{episode.publicationDate}</p>
@@ -49,19 +61,23 @@ function NovelEpisodeList({
               <span>{episode.episodeNumber}화</span>
               <button
                 className="free-badge"
-                onClick={() => onPurchase(episode)}
-                disabled={purchasingId === episode.episodeId}
+                onClick={() => {
+                  if (!isPurchased) onPurchase(episode);
+                }}
+                disabled={
+                  isPurchased || idOf(purchasingId) === idOf(episode.episodeId)
+                }
                 style={{
                   backgroundColor: isPurchased ? "#EEEEEE" : "#FFFFFF",
                   color: "#000",
                   border: "1px solid #ccc",
                 }}
               >
-                {purchasingId === episode.episodeId
+                {isPurchased
+                  ? "완료"
+                  : idOf(purchasingId) === idOf(episode.episodeId)
                   ? "처리 중..."
-                  : isPurchased
-                    ? "구매완료"
-                    : "무료"}
+                  : "무료"}
               </button>
             </div>
           </div>
@@ -76,14 +92,35 @@ const NovelEpisode = ({ novel }) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [visibleCount, setVisibleCount] = useState(EPISODES_PER_BATCH);
   const [purchasingId, setPurchasingId] = useState(null);
-  const [purchasedEpisodes, setPurchasedEpisodes] = useState([]);
+  const [purchasedEpisodes, setPurchasedEpisodes] = useState([]); // 문자열 배열
   const navigate = useNavigate();
 
+  // 에피소드 목록 + 구매 여부(isPurchased) 함께 조회
   useEffect(() => {
     const fetchEpisodes = async () => {
       try {
-        const res = await instance.get(`/novels/${novel.novelId}/episodes`);
-        setEpisodes(res.data);
+        const token = getStoredToken();
+        console.log("토큰 존재 여부:", !!token); // ✅ 토큰 확인
+
+        const res = await instance.get(`/novels/${novel.novelId}/episodes`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
+
+        const list = Array.isArray(res.data) ? res.data : [];
+        setEpisodes(list);
+
+        // ✅ 디버그: 원본 응답 확인
+        console.log("에피소드 API 응답:", list);
+
+        // 응답의 isPurchased=true 인 episodeId만 수집(문자열로 정규화)
+        const purchased = list
+          .filter((ep) => ep?.isPurchased === true)
+          .map((ep) => idOf(ep.episodeId));
+
+        setPurchasedEpisodes(purchased);
+
+        // ✅ 디버그: 구매된 episodeId 목록 확인
+        console.log("구매된 episodeId 목록:", purchased);
       } catch (error) {
         console.error("에피소드 불러오기 실패:", error);
       }
@@ -94,11 +131,16 @@ const NovelEpisode = ({ novel }) => {
 
   if (!novel) return <div>오류 발생</div>;
 
-  const sortedEpisodes = [...episodes].sort((a, b) =>
-    sortOrder === "asc"
-      ? a.episodeNumber - b.episodeNumber
-      : b.episodeNumber - a.episodeNumber
+  const sortedEpisodes = useMemo(
+    () =>
+      [...episodes].sort((a, b) =>
+        sortOrder === "asc"
+          ? a.episodeNumber - b.episodeNumber
+          : b.episodeNumber - a.episodeNumber
+      ),
+    [episodes, sortOrder]
   );
+
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount);
 
   const handleLoadMore = () =>
@@ -110,16 +152,27 @@ const NovelEpisode = ({ novel }) => {
   };
 
   const handlePurchase = async (episode) => {
+    // 이미 구매된 회차는 API 호출 없이 바로 뷰어로 이동
+    if (purchasedEpisodes.includes(idOf(episode.episodeId))) {
+      console.log("이미 구매됨 → 바로 이동:", episode.episodeId); // ✅ 로그
+      navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
+      return;
+    }
+
     try {
       setPurchasingId(episode.episodeId);
 
       const token = getStoredToken();
-      console.log("accessToken:", token);
-
       if (!token) {
         alert("인증 정보가 없습니다. 로그인 후 다시 시도해 주세요.");
         return;
       }
+
+      // ✅ 디버그: 구매 요청 페이로드
+      console.log("구매 요청:", {
+        episodeId: episode.episodeId,
+        novelId: episode.novelId,
+      });
 
       await instance.post(
         "/purchase",
@@ -128,18 +181,31 @@ const NovelEpisode = ({ novel }) => {
           novelId: episode.novelId,
           ispurchased: true,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
+      // ✅ 성공 시 상태 갱신(문자열로 저장)
+      setPurchasedEpisodes((prev) => {
+        const epId = idOf(episode.episodeId);
+        const next = prev.includes(epId) ? prev : [...prev, epId];
+        alert("구매 성공");
+        console.log("구매 성공 → purchasedEpisodes 갱신:", next); // ✅ 로그
+        return next;
+      });
+
       navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
     } catch (err) {
       const status = err?.response?.status;
+      console.error("구매 실패:", status, err);
 
       if (status === 409) {
-        setPurchasedEpisodes((prev) => [...prev, episode.episodeId]);
+        // 이미 구매된 상태
+        setPurchasedEpisodes((prev) => {
+          const epId = idOf(episode.episodeId);
+          const next = prev.includes(epId) ? prev : [...prev, epId];
+          console.log("409 처리 → purchasedEpisodes 갱신:", next); // ✅ 로그
+          return next;
+        });
         navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
         return;
       }
@@ -152,7 +218,6 @@ const NovelEpisode = ({ novel }) => {
       } else {
         alert("구매 처리 중 오류가 발생했습니다.");
       }
-      console.error("구매 실패:", err);
     } finally {
       setPurchasingId(null);
     }

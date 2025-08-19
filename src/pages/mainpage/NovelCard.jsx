@@ -16,7 +16,7 @@ const NovelCard = ({ novel }) => {
           />
         )}
       </div>
-
+        
       {/*  제목 + 장르/작가 정보 */}
       <h2 className="novel-info-title">{title}</h2>
       <p className="novel-info-meta">

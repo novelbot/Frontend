@@ -6,9 +6,6 @@ import "./NovelList.css"; // 스타일은 그대로 사용
 const NovelCard = ({ novel }) => {
   const navigate = useNavigate();
 
-  console.log("NovelCard novel:", novel);
-  console.log("coverImageUrl:", novel.coverImageUrl);
-
   const handleClick = () => {
     navigate(`/MainPage/${novel.novelId}`, {
       state: { novel }, // novel 객체를 상태로 전달

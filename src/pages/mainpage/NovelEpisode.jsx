@@ -17,7 +17,7 @@ const getStoredToken = () => {
   return raw?.replace(/^Bearer\s+/i, "") ?? null;
 };
 
-// ✅ episodeId 정규화(문자열)
+// episodeId 정규화(문자열)
 const idOf = (id) => (id == null ? "" : String(id));
 
 function NovelEpisodeList({
@@ -35,7 +35,7 @@ function NovelEpisodeList({
         type: typeof ep.episodeId,
         isPurchased: purchasedEpisodes.includes(idOf(ep.episodeId)),
       }));
-      console.table(dbg); // ✅ 각 에피소드별 구매 여부 표로 확인
+      console.table(dbg);
     } catch {}
   }, [episodes, purchasedEpisodes]);
 
@@ -61,17 +61,24 @@ function NovelEpisodeList({
               <span>{episode.episodeNumber}화</span>
               <button
                 className="free-badge"
-                onClick={() => {
-                  if (!isPurchased) onPurchase(episode);
-                }}
-                disabled={
-                  isPurchased || idOf(purchasingId) === idOf(episode.episodeId)
-                }
+                // 완료 상태에서도 클릭 가능 → onPurchase가 내부에서 분기 처리
+                onClick={() => onPurchase(episode)}
+                // 구매 진행 중일 때만 비활성화
+                disabled={idOf(purchasingId) === idOf(episode.episodeId)}
                 style={{
                   backgroundColor: isPurchased ? "#EEEEEE" : "#FFFFFF",
                   color: "#000",
                   border: "1px solid #ccc",
+                  cursor:
+                    idOf(purchasingId) === idOf(episode.episodeId)
+                      ? "not-allowed"
+                      : "pointer",
                 }}
+                title={
+                  isPurchased
+                    ? "이미 구매된 회차입니다. 클릭하면 바로 열람합니다."
+                    : "무료로 구매합니다."
+                }
               >
                 {isPurchased
                   ? "완료"
@@ -100,7 +107,7 @@ const NovelEpisode = ({ novel }) => {
     const fetchEpisodes = async () => {
       try {
         const token = getStoredToken();
-        console.log("토큰 존재 여부:", !!token); // ✅ 토큰 확인
+        console.log("토큰 존재 여부:", !!token);
 
         const res = await instance.get(`/novels/${novel.novelId}/episodes`, {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -109,7 +116,7 @@ const NovelEpisode = ({ novel }) => {
         const list = Array.isArray(res.data) ? res.data : [];
         setEpisodes(list);
 
-        // ✅ 디버그: 원본 응답 확인
+        // 디버그: 원본 응답
         console.log("에피소드 API 응답:", list);
 
         // 응답의 isPurchased=true 인 episodeId만 수집(문자열로 정규화)
@@ -118,8 +125,6 @@ const NovelEpisode = ({ novel }) => {
           .map((ep) => idOf(ep.episodeId));
 
         setPurchasedEpisodes(purchased);
-
-        // ✅ 디버그: 구매된 episodeId 목록 확인
         console.log("구매된 episodeId 목록:", purchased);
       } catch (error) {
         console.error("에피소드 불러오기 실패:", error);
@@ -152,9 +157,12 @@ const NovelEpisode = ({ novel }) => {
   };
 
   const handlePurchase = async (episode) => {
+    const epId = idOf(episode.episodeId);
+
     // 이미 구매된 회차는 API 호출 없이 바로 뷰어로 이동
-    if (purchasedEpisodes.includes(idOf(episode.episodeId))) {
-      console.log("이미 구매됨 → 바로 이동:", episode.episodeId); // ✅ 로그
+    if (purchasedEpisodes.includes(epId)) {
+      alert("이미 구매된 회차입니다. 바로 열람합니다.");
+      console.log("이미 구매됨 → 바로 이동:", episode.episodeId);
       navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);
       return;
     }
@@ -168,7 +176,7 @@ const NovelEpisode = ({ novel }) => {
         return;
       }
 
-      // ✅ 디버그: 구매 요청 페이로드
+      // 디버그: 구매 요청 페이로드
       console.log("구매 요청:", {
         episodeId: episode.episodeId,
         novelId: episode.novelId,
@@ -184,12 +192,11 @@ const NovelEpisode = ({ novel }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // ✅ 성공 시 상태 갱신(문자열로 저장)
+      // 성공 시 상태 갱신(문자열로 저장)
       setPurchasedEpisodes((prev) => {
-        const epId = idOf(episode.episodeId);
         const next = prev.includes(epId) ? prev : [...prev, epId];
         alert("구매 성공");
-        console.log("구매 성공 → purchasedEpisodes 갱신:", next); // ✅ 로그
+        console.log("구매 성공 → purchasedEpisodes 갱신:", next);
         return next;
       });
 
@@ -199,11 +206,11 @@ const NovelEpisode = ({ novel }) => {
       console.error("구매 실패:", status, err);
 
       if (status === 409) {
-        // 이미 구매된 상태
+        // 이미 구매된 상태 → 목록 갱신 후 이동
+        alert("이미 구매된 회차입니다. 바로 열람합니다.");
         setPurchasedEpisodes((prev) => {
-          const epId = idOf(episode.episodeId);
           const next = prev.includes(epId) ? prev : [...prev, epId];
-          console.log("409 처리 → purchasedEpisodes 갱신:", next); // ✅ 로그
+          console.log("409 처리 → purchasedEpisodes 갱신:", next);
           return next;
         });
         navigate(`/viewer/${episode.novelId}/${episode.episodeNumber}`);

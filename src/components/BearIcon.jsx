@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom"; // 추가
+import { useLocation } from "react-router-dom";
 import "./BearIcon.css";
 import bearDown from "../assets/bear_down.png";
 import bearUp from "../assets/bear_up.png";
 import BearOverlay from "./BearOverlay";
-import ChatBearOverlay from "./ChatBearOverlay"; // Chat 전용 오버레이
+import ChatBearOverlay from "./ChatBearOverlay";
 
 function BearIcon({ isOpen, setIsOpen }) {
-  const location = useLocation(); // 현재 경로 가져오기
+  const location = useLocation();
   const isViewerPage = location.pathname.startsWith("/viewer/");
 
   const [overlayType, setOverlayType] = useState("bear"); // "bear" | "chat"
@@ -18,8 +18,16 @@ function BearIcon({ isOpen, setIsOpen }) {
       // 닫을 때 초기화
       setOverlayType("bear");
       setSelectedNovelId(null);
+      setIsOpen(false);
+    } else {
+      // 열 때 로그인 여부 확인
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("로그인 후 이용할 수 있습니다.");
+        return;
+      }
+      setIsOpen(true);
     }
-    setIsOpen((prev) => !prev);
   };
 
   const openChatOverlay = (novelId) => {

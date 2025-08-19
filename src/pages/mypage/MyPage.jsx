@@ -180,33 +180,40 @@ function MyPage() {
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (!token) {
       alert("이미 로그아웃된 상태입니다.");
       navigate("/");
       return;
     }
-    const colorKey = editData.username
-      ? `avatarBgColor_${editData.username}`
-      : null;
+
     try {
-      await instance.post("/auth/logout", null, {
-        params: { token: encodeURIComponent(token) },
-        headers: {},
+      await instance.post("/auth/logout", {}, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+
+      // 로컬 세션 정리
+      const colorKey = editData.username ? `avatarBgColor_${editData.username}` : null;
       if (colorKey) localStorage.removeItem(colorKey);
       localStorage.removeItem("token");
+
       window.dispatchEvent(new Event("authChanged"));
       alert("로그아웃 완료");
       navigate("/");
     } catch (err) {
       console.error("로그아웃 실패:", err?.response?.data || err?.message);
+
+      // 실패해도 로컬 세션은 정리
+      const colorKey = editData.username ? `avatarBgColor_${editData.username}` : null;
       if (colorKey) localStorage.removeItem(colorKey);
       localStorage.removeItem("token");
+
       window.dispatchEvent(new Event("authChanged"));
       alert("서버 오류가 있었지만, 로컬 세션은 종료했습니다.");
       navigate("/");
     }
   };
+
 
   const handleWithdraw = () => {
     console.log("서비스 탈퇴");

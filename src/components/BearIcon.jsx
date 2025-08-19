@@ -43,9 +43,17 @@ function BearIcon({ isOpen, setIsOpen }) {
       {/* 오버레이 열렸을 때 컴포넌트 분기 */}
       {isOpen &&
         (isViewerPage ? (
-          <ChatBearOverlay novelId={selectedNovelId} onClose={toggleOverlay} />
+          <ChatBearOverlay
+            novelId={selectedNovelId}
+            onClose={toggleOverlay}
+            isViewer={isViewerPage}
+          />
         ) : overlayType === "chat" ? (
-          <ChatBearOverlay novelId={selectedNovelId} onClose={toggleOverlay} />
+          <ChatBearOverlay
+            novelId={selectedNovelId}
+            onClose={toggleOverlay}
+            isViewer={isViewerPage}
+          />
         ) : (
           <BearOverlay
             onClose={toggleOverlay}

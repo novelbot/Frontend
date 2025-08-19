@@ -5,7 +5,7 @@ import BlacksendIcon from "../assets/blacksend.png";
 import "./ChatBearOverlay.css";
 import { instance } from "../API/api";
 
-function ChatRoom({ novelId, chatTitle, chatId, onBack }) {
+function ChatRoom({ chatTitle, chatId, onBack }) {
   const chatButtons = [
     "이전화 한줄 요약",
     "현재까지 줄거리",
@@ -39,6 +39,7 @@ function ChatRoom({ novelId, chatTitle, chatId, onBack }) {
   // chatId로 쿼리 기록 가져오기
   useEffect(() => {
     if (!chatId) return;
+    console.log(chatId);
 
     const fetchQueries = async () => {
       try {

@@ -8,12 +8,15 @@ const NovelCard = ({ novel }) => {
     <div className="novel-info">
       {/*  소설 표지 이미지 */}
       <div className="novel-info-image-wrapper">
-        <img
-          className="novel-info-foreground"
-          src={coverImageUrl}
-          alt={`${title} 표지`}
-        />
+        {coverImageUrl && (
+          <img
+            className="novel-info-foreground"
+            src={coverImageUrl}
+            alt={`${title} 표지`}
+          />
+        )}
       </div>
+        
       {/*  제목 + 장르/작가 정보 */}
       <h2 className="novel-info-title">{title}</h2>
       <p className="novel-info-meta">

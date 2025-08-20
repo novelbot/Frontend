@@ -13,10 +13,10 @@ import "./ChatRoom.css";
 
 function ChatRoom({ chatTitle, chatId, onBack, novelId, episodeNumber }) {
   const chatButtons = [
-    "이전화 한줄 요약",
-    "현재까지 줄거리",
-    "인물 관계도",
-    "주인공의 행적",
+    episodeNumber != 1 ? `${episodeNumber - 1}화 한줄 요약` : "소설 장르",
+    `${episodeNumber}화까지 줄거리`,
+    "인물 관계 설명",
+    "주인공의 행적 설명",
   ];
 
   const [inputText, setInputText] = useState("");
@@ -240,14 +240,15 @@ function ChatRoom({ chatTitle, chatId, onBack, novelId, episodeNumber }) {
         {chatHistory.map((item, index) => (
           <div
             key={index}
-            className={`chat-bubble ${item.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
-              }`}
+            className={`chat-bubble ${
+              item.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
+            }`}
           >
             {item.text}
           </div>
         ))}
         <div ref={messagesEndRef} />
-{!isReadOnly && showChatButtons && (
+        {!isReadOnly && showChatButtons && (
           <div className="chat-buttons-wrapper">
             {chatButtons.map((text, index) => (
               <button
@@ -262,9 +263,15 @@ function ChatRoom({ chatTitle, chatId, onBack, novelId, episodeNumber }) {
         )}
       </div>
 
-      <div className={`chat-input-bar ${isReadOnly ? "chat-input-bar--readonly" : ""}`}>
+      <div
+        className={`chat-input-bar ${
+          isReadOnly ? "chat-input-bar--readonly" : ""
+        }`}
+      >
         {isReadOnly ? (
-          <span className="chat-readonly-msg">소설 밖에서는 메시지 전송이 불가합니다.</span>
+          <span className="chat-readonly-msg">
+            소설 밖에서는 메시지 전송이 불가합니다.
+          </span>
         ) : (
           <>
             <input
@@ -283,7 +290,6 @@ function ChatRoom({ chatTitle, chatId, onBack, novelId, episodeNumber }) {
           </>
         )}
       </div>
-
     </div>
   );
 }

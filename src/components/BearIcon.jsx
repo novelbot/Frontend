@@ -41,7 +41,7 @@ function BearIcon({ isOpen, setIsOpen }) {
         <img src={isOpen ? bearUp : bearDown} alt="bear" />
 
         {/* 오버레이 닫혀있을 때만 말풍선 표시 (viewer 페이지는 제외) */}
-        {!isViewerPage && (
+        {!isViewerPage && !localStorage.getItem("token") && (
           <div className={`bear-tooltip ${isOpen ? "disabled" : ""}`}>
             회원가입 후 곰과 대화해 보세요!
           </div>

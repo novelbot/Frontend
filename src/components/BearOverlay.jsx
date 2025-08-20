@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { instance } from "../API/api";
 import "./BearOverlay.css";
-import SearchBar from "./SearchBar";
+import ChatSearchBar from "./ChatSearchBar";
 import folderIcon from "../assets/folder.png"; // 작품 아이템에 사용할 폴더 아이콘
 import ChatBearOverlay from "./ChatBearOverlay";
 
@@ -9,6 +9,15 @@ function BearOverlay({ onSelectNovel }) {
   const [novelsChat, setNovelsChat] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedNovelId, setSelectedNovelId] = useState(null);
+
+  // 검색 결과 상태
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    // console.log("검색 결과:", results);
+    // 여기서 상태 저장해서 리스트 렌더링하면 됨
+  };
 
   // 인터셉터 등록 (한 번만)
   useEffect(() => {
@@ -60,6 +69,8 @@ function BearOverlay({ onSelectNovel }) {
     return <div>로딩 중...</div>;
   }
 
+  const displayList = searchResults.length > 0 ? searchResults : novelsChat;
+
   return (
     <div className="bear-overlay">
       <div className="bear-overlay-content">
@@ -67,11 +78,14 @@ function BearOverlay({ onSelectNovel }) {
       </div>
 
       <div className="searchbar-box">
-        <SearchBar placeholder="작품 검색" />
+        <ChatSearchBar
+          placeholder="작품 검색"
+          onResults={handleSearchResults}
+        />
       </div>
 
       <div className="scrollable-work-list">
-        {novelsChat.map((novel) => (
+        {displayList.map((novel) => (
           <div
             className="work-item"
             key={novel.novelId}

@@ -53,7 +53,7 @@ function App() {
           path="/viewer/:id/:number"
           element={<Viewer bearOpen={bearOpen} />}
         />
-        <Route path="/cart" element={<Cart />} />
+        {/* <Route path="/cart" element={<Cart />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/sign" element={<Signup />} />
         <Route path="/MyPage" element={<MyPage />} />

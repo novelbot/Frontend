@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useMatch } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useMatch } from "react-router-dom";
 import { instance } from "../API/api";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
@@ -7,9 +7,11 @@ import { over } from "stompjs";
 import bookmarkIcon from "../assets/bookmark.png";
 import backIcon from "../assets/back.png";
 import BlacksendIcon from "../assets/blacksend.png";
+import bookOpenIcon from "../assets/book-open.png";
 import "./ChatBearOverlay.css";
+import "./ChatRoom.css";
 
-function ChatRoom({ chatTitle, chatId, onBack }) {
+function ChatRoom({ chatTitle, chatId, onBack, novelId, episodeNumber }) {
   const chatButtons = [
     "이전화 한줄 요약",
     "현재까지 줄거리",
@@ -189,34 +191,22 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
     }
   };
 
-  // const handleSend = async (forcedText) => {
-  //   const textToSend = (forcedText ?? inputText).trim();
-  //   if (!textToSend) return;
+  // 에피 이동용 변수 (채팅방 생성된 에피소드로 이동함)
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  // 클릭 시 이동 함수
+  const handleClick = () => {
+    navigate(`/viewer/${novelId}/${episodeNumber}`);
+  };
 
-  //   setShowChatButtons(false);
-  //   try {
-  //     // 질문 POST
-  //     const res = await instance.post(`/chatrooms/${chatId}/queries`, {
-  //       queryContent: textToSend,
-  //       chatId: chatId,
-  //     });
-
-  //     const queryId = res.data.queryId; // 서버에서 넘겨주는 queryId
-  //     console.log(queryId);
-  //     // 화면에 user 메시지 추가
-  //     setChatHistory((prev) => [...prev, { role: "user", text: textToSend }]);
-  //     setInputText("");
-
-  //     // 답변 GET
-  //     const answerRes = await instance.get(
-  //       `/chatrooms/${chatId}/queries/${queryId}/answer`
-  //     );
-  //     const answer = answerRes.data.queryAnswer;
-  //     setMessages((prev) => [...prev, { role: "ai", text: answer }]);
-  //   } catch (err) {
-  //     console.error("Query 전송/응답 실패:", err);
-  //   }
-  // };
+  // 스크롤 제일 밑에서 시작하기
+  const messagesEndRef = useRef(null);
+  // 컴포넌트 처음 로드 + chatHistory 변경될 때 스크롤 유지
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    }
+  }, [chatHistory]); // chatHistory가 바뀔 때마다 맨 밑으로 이동
 
   return (
     <div className="bear-overlay">
@@ -230,7 +220,19 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
             style={{ cursor: "pointer" }}
           />
           <span className="chat-title">{chatTitle}</span>
-          <img src={bookmarkIcon} alt="bookmark" className="chat-icon" />
+          <div className="book-icon">
+            <img
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onClick={handleClick}
+              src={isHovered ? bookOpenIcon : bookmarkIcon}
+              alt="bookmark"
+              className="chat-icon"
+            />
+            <div className={`bear-tooltip ${isHovered ? "" : "disabled"}`}>
+              해당 에피소드로 이동할 수 있어요!
+            </div>
+          </div>
         </div>
       </div>
 
@@ -244,8 +246,8 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
             {item.text}
           </div>
         ))}
-
-        {!isReadOnly && showChatButtons && (
+        <div ref={messagesEndRef} />
+{!isReadOnly && showChatButtons && (
           <div className="chat-buttons-wrapper">
             {chatButtons.map((text, index) => (
               <button

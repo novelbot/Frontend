@@ -150,7 +150,6 @@ function ViewerControlBar({ title, pageIndex, setPageIndex }) {
         >
           다음화 ▶
         </button>
-        <span className="welcome-msg">RyuJaeHun님 환영합니다!</span>
       </div>
     </header>
   );

@@ -107,7 +107,7 @@ function ChatBearOverlay({ novelId, onClose, isViewer }) {
           // console.log("생성된 채팅방:", newRoom);
           if (isViewer) {
             // isViewer면 바로 ChatRoom으로
-            setChatId(newRoom.chatId);
+            setChatId(newRoom);
             setChatTitle(`${episodeNumber}화`);
             setView("chat");
           }

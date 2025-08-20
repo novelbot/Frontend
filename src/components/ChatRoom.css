@@ -35,3 +35,34 @@
 .bear-tooltip.disabled {
   display: none !important;
 }
+
+/* 스트리밍 관련 스타일 */
+.streaming-cursor {
+  color: #2196f3;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.streaming-dots {
+  color: #666;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.chat-bubble.streaming {
+  position: relative;
+}
+
+.chat-bubble-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

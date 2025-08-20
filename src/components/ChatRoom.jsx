@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { instance } from "../API/api";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
+
 import bookmarkIcon from "../assets/bookmark.png";
 import backIcon from "../assets/back.png";
 import BlacksendIcon from "../assets/blacksend.png";
 import "./ChatBearOverlay.css";
-import { instance } from "../API/api";
 
 function ChatRoom({ chatTitle, chatId, onBack }) {
   const chatButtons = [
@@ -16,6 +19,7 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
   const [inputText, setInputText] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [showChatButtons, setShowChatButtons] = useState(true);
+  const [stompClient, setStompClient] = useState(null);
 
   // 인터셉터 등록 (한 번만)
   useEffect(() => {
@@ -39,7 +43,6 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
   // chatId로 쿼리 기록 가져오기
   useEffect(() => {
     if (!chatId) return;
-    console.log(chatId);
 
     const fetchQueries = async () => {
       try {
@@ -74,34 +77,121 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
     fetchQueries();
   }, [chatId]);
 
+  // 웹소켓 연결
+  useEffect(() => {
+    const socket = new SockJS("https://api.novelbot.org/ws"); // 배포 주소
+    const client = over(socket);
+
+    console.log("웹소켓 연결 시도");
+
+    client.connect(
+      {},
+      () => {
+        console.log("웹소켓 연결 성공");
+        setStompClient(client);
+      },
+      (error) => {
+        console.error("웹소켓 연결 실패", error);
+      }
+    );
+
+    return () => {
+      if (client && client.connected) {
+        client.disconnect(() => {
+          console.log("웹소켓 연결 종료");
+          setStompClient(null);
+        });
+      }
+    };
+  }, []);
+
+  // 메시지 전송 함수
   const handleSend = async (forcedText) => {
     const textToSend = (forcedText ?? inputText).trim();
     if (!textToSend) return;
-
     setShowChatButtons(false);
+    setInputText("");
+
     try {
-      // 질문 POST
+      // queryId 받기
       const res = await instance.post(`/chatrooms/${chatId}/queries`, {
         queryContent: textToSend,
-        chatId: chatId,
+        chatId,
       });
+      const queryId = res.data;
 
-      const queryId = res.data.queryId; // 서버에서 넘겨주는 queryId
-      console.log(queryId);
-      // 화면에 user 메시지 추가
+      // 화면에 유저 메시지 표시
       setChatHistory((prev) => [...prev, { role: "user", text: textToSend }]);
-      setInputText("");
 
-      // 답변 GET
-      const answerRes = await instance.get(
-        `/chatrooms/${chatId}/queries/${queryId}/answer`
-      );
-      const answer = answerRes.data.queryAnswer;
-      setMessages((prev) => [...prev, { role: "ai", text: answer }]);
+      // WebSocket 구독 -> AI 답변 받기
+      let received = false; // 메시지 수신 여부 확인
+      if (stompClient && stompClient.connected) {
+        const sub = stompClient.subscribe(
+          `/topic/query/${queryId}`,
+          (message) => {
+            received = true;
+            console.log("답변 받음:", message.body);
+            const body = JSON.parse(message.body);
+            setChatHistory((prev) => [
+              ...prev,
+              { role: "ai", text: body.queryAnswer },
+            ]);
+            sub.unsubscribe();
+          }
+          // { id: `${queryId}` } // id를 부여
+        );
+      }
+
+      // 일정 시간 후 REST GET으로 답변 가져오기 (임시)
+      console.log(received);
+      // setTimeout(async () => {
+      //   if (!received) {
+      //     try {
+      //       const answerRes = await instance.get(
+      //         `/chatrooms/${chatId}/queries/${queryId}/answer`
+      //       );
+      //       const answer = answerRes.data.queryAnswer;
+      //       if (answer) {
+      //         setChatHistory((prev) => [...prev, { role: "ai", text: answer }]);
+      //       }
+      //     } catch (err) {
+      //       console.error("Fallback 답변 조회 실패:", err);
+      //     }
+      //   }
+      // }, 3000); // 3초 후 fallback
     } catch (err) {
-      console.error("Query 전송/응답 실패:", err);
+      console.error("Query 전송 실패:", err);
     }
   };
+
+  // const handleSend = async (forcedText) => {
+  //   const textToSend = (forcedText ?? inputText).trim();
+  //   if (!textToSend) return;
+
+  //   setShowChatButtons(false);
+  //   try {
+  //     // 질문 POST
+  //     const res = await instance.post(`/chatrooms/${chatId}/queries`, {
+  //       queryContent: textToSend,
+  //       chatId: chatId,
+  //     });
+
+  //     const queryId = res.data.queryId; // 서버에서 넘겨주는 queryId
+  //     console.log(queryId);
+  //     // 화면에 user 메시지 추가
+  //     setChatHistory((prev) => [...prev, { role: "user", text: textToSend }]);
+  //     setInputText("");
+
+  //     // 답변 GET
+  //     const answerRes = await instance.get(
+  //       `/chatrooms/${chatId}/queries/${queryId}/answer`
+  //     );
+  //     const answer = answerRes.data.queryAnswer;
+  //     setMessages((prev) => [...prev, { role: "ai", text: answer }]);
+  //   } catch (err) {
+  //     console.error("Query 전송/응답 실패:", err);
+  //   }
+  // };
 
   return (
     <div className="bear-overlay">

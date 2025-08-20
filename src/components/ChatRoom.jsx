@@ -113,52 +113,73 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
     setInputText("");
 
     try {
-      // queryId 받기
-      const res = await instance.post(`/chatrooms/${chatId}/queries`, {
-        queryContent: textToSend,
-        chatId,
-      });
-      const queryId = res.data;
+      // 임시 queryId 생성 (서버에서 실제 ID를 받을 때까지)
+      const tempQueryId = Date.now();
+      let actualQueryId = null;
+      let received = false;
 
-      // 화면에 유저 메시지 표시
-      setChatHistory((prev) => [...prev, { role: "user", text: textToSend }]);
-
-      // WebSocket 구독 -> AI 답변 받기
-      let received = false; // 메시지 수신 여부 확인
+      // 1. 먼저 웹소켓 구독 설정
       if (stompClient && stompClient.connected) {
         const sub = stompClient.subscribe(
-          `/topic/query/${queryId}`,
+          `/topic/query/${tempQueryId}`, // 임시로 구독
           (message) => {
             received = true;
             console.log("답변 받음:", message.body);
             const body = JSON.parse(message.body);
             setChatHistory((prev) => [
               ...prev,
-              { role: "ai", text: body.queryAnswer },
+              { role: "ai", text: body.message },
             ]);
             sub.unsubscribe();
           }
-          // { id: `${queryId}` } // id를 부여
         );
+
+        // 2. POST 요청으로 queryId 받기
+        const res = await instance.post(`/chatrooms/${chatId}/queries`, {
+          queryContent: textToSend,
+          chatId,
+        });
+        actualQueryId = res.data;
+
+        // 3. 실제 queryId로 구독 재설정
+        sub.unsubscribe();
+        stompClient.subscribe(`/topic/query/${actualQueryId}`, (message) => {
+          received = true;
+          console.log("답변 받음:", message.body);
+          const body = JSON.parse(message.body);
+          setChatHistory((prev) => [
+            ...prev,
+            { role: "ai", text: body.message },
+          ]);
+        });
+      } else {
+        // 웹소켓이 연결되지 않은 경우에만 POST
+        const res = await instance.post(`/chatrooms/${chatId}/queries`, {
+          queryContent: textToSend,
+          chatId,
+        });
+        actualQueryId = res.data;
       }
 
-      // 일정 시간 후 REST GET으로 답변 가져오기 (임시)
-      console.log(received);
-      // setTimeout(async () => {
-      //   if (!received) {
-      //     try {
-      //       const answerRes = await instance.get(
-      //         `/chatrooms/${chatId}/queries/${queryId}/answer`
-      //       );
-      //       const answer = answerRes.data.queryAnswer;
-      //       if (answer) {
-      //         setChatHistory((prev) => [...prev, { role: "ai", text: answer }]);
-      //       }
-      //     } catch (err) {
-      //       console.error("Fallback 답변 조회 실패:", err);
-      //     }
-      //   }
-      // }, 3000); // 3초 후 fallback
+      // 화면에 유저 메시지 표시
+      setChatHistory((prev) => [...prev, { role: "user", text: textToSend }]);
+
+      // 타임아웃 fallback (10초 후)
+      setTimeout(async () => {
+        if (!received && actualQueryId) {
+          try {
+            const answerRes = await instance.get(
+              `/chatrooms/${chatId}/queries/${actualQueryId}/answer`
+            );
+            const answer = answerRes.data.queryAnswer;
+            if (answer && answer !== "처리중...") {
+              setChatHistory((prev) => [...prev, { role: "ai", text: answer }]);
+            }
+          } catch (err) {
+            console.error("Fallback 답변 조회 실패:", err);
+          }
+        }
+      }, 10000);
     } catch (err) {
       console.error("Query 전송 실패:", err);
     }

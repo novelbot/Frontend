@@ -17,6 +17,8 @@
 .episode-title {
   font-size: 0.9rem; /* 18px → 0.9rem */
   font-weight: bold;
+  color: white !important;
+  text-align: center !important;
 }
 
 .nav-button {

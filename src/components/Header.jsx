@@ -98,7 +98,17 @@ function Header({ onSearchResults }) {
       <div className="left-section">
         <Link to="/" className="header-logo">Novel Bot</Link>
         <Link to="/Cart" className="menu">장바구니</Link>
-        <Link to="/" className="menu">웹소설</Link>
+        <Link
+          to="/"
+          className="menu"
+          onClick={(e) => {
+            e.preventDefault(); // 기본 Link 동작 막기
+            window.location.href = "/"; // 강제 새로고침 이동
+          }}
+        >
+          웹소설
+        </Link>
+
       </div>
 
       <div className="right-section">

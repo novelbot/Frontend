@@ -34,10 +34,16 @@ export async function createChatRoom(novelId, episodeId, chatTitle) {
   }
 }
 
+export function extractEpisodeNumber(text) {
+  const match = text.match(/(\d+)화/); // 숫자 + "화" 패턴 찾기
+  return match ? parseInt(match[1], 10) : null; // 있으면 숫자 반환, 없으면 null
+}
+
 function ChatBearOverlay({ novelId, onClose, isViewer }) {
   const [view, setView] = useState("list"); // "list" | "chat"
   const [chatTitle, setChatTitle] = useState("새로운 채팅");
   const [chatId, setChatId] = useState(null);
+  const [epiNum, setEipNum] = useState(null);
 
   const handleEnterChat = (chatId, title) => {
     setChatTitle(title);
@@ -133,6 +139,8 @@ function ChatBearOverlay({ novelId, onClose, isViewer }) {
           chatTitle={chatTitle}
           chatId={chatId}
           onBack={handleBackToList}
+          novelId={novelId}
+          episodeNumber={extractEpisodeNumber(chatTitle)}
         />
       )}
     </>

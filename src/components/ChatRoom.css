@@ -1,20 +1,8 @@
-.bear-icon {
-  position: fixed; /* 화면 오른쪽 하단에 고정 */
-  bottom: 0.5rem; /* 10px → 0.5rem */
-  right: 0.4rem; /* 8px → 0.4rem */
-}
-
-.bear-icon img {
-  width: 7.5rem; /* 150px → 7.5rem */
-  height: auto;
-  display: block;
-}
-
 /* 🟦 곰돌이 위에 나타나는 말풍선 스타일 */
 .bear-tooltip {
   position: absolute;
   bottom: 70%; /* 70%는 비율이므로 그대로 유지 */
-  right: 4.5rem; /* 90px → 4.5rem */
+  right: 1.2rem; /* 90px → 4.5rem */
   margin-bottom: 0.4rem; /* 8px → 0.4rem */
   background-color: #2196f3;
   color: white;
@@ -39,7 +27,7 @@
 }
 
 /* 🐻 곰돌이에 마우스를 올렸을 때 말풍선 보이게 */
-.bear-icon:hover .bear-tooltip {
+.book-icon:hover .bear-tooltip {
   opacity: 1;
 }
 

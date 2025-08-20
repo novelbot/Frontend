@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useMatch } from "react-router-dom";
 import { instance } from "../API/api";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
@@ -20,6 +21,9 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
   const [chatHistory, setChatHistory] = useState([]);
   const [showChatButtons, setShowChatButtons] = useState(true);
   const [stompClient, setStompClient] = useState(null);
+
+  const isViewerPath = !!useMatch("/viewer/*");
+  const isReadOnly = !isViewerPath;
 
   // 인터셉터 등록 (한 번만)
   useEffect(() => {
@@ -108,7 +112,7 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
   // 메시지 전송 함수
   const handleSend = async (forcedText) => {
     const textToSend = (forcedText ?? inputText).trim();
-    if (!textToSend) return;
+    if (!textToSend || isReadOnly) return;
     setShowChatButtons(false);
     setInputText("");
 
@@ -234,15 +238,14 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
         {chatHistory.map((item, index) => (
           <div
             key={index}
-            className={`chat-bubble ${
-              item.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
-            }`}
+            className={`chat-bubble ${item.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
+              }`}
           >
             {item.text}
           </div>
         ))}
 
-        {showChatButtons && (
+        {!isReadOnly && showChatButtons && (
           <div className="chat-buttons-wrapper">
             {chatButtons.map((text, index) => (
               <button
@@ -257,21 +260,28 @@ function ChatRoom({ chatTitle, chatId, onBack }) {
         )}
       </div>
 
-      <div className="chat-input-bar">
-        <input
-          type="text"
-          placeholder="무엇이든 물어보세요"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.isComposing || e.nativeEvent.isComposing) return;
-            if (e.key === "Enter") handleSend();
-          }}
-        />
-        <button className="chat-send-btn" onClick={() => handleSend()}>
-          <img src={BlacksendIcon} alt="send" className="send-icon" />
-        </button>
+      <div className={`chat-input-bar ${isReadOnly ? "chat-input-bar--readonly" : ""}`}>
+        {isReadOnly ? (
+          <span className="chat-readonly-msg">소설 밖에서는 메시지 전송이 불가합니다.</span>
+        ) : (
+          <>
+            <input
+              type="text"
+              placeholder={`이 대화는 ${chatTitle}까지의 내용을 중심으로 진행됩니다.`}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.isComposing || e.nativeEvent.isComposing) return;
+                if (e.key === "Enter") handleSend();
+              }}
+            />
+            <button className="chat-send-btn" onClick={() => handleSend()}>
+              <img src={BlacksendIcon} alt="send" className="send-icon" />
+            </button>
+          </>
+        )}
       </div>
+
     </div>
   );
 }

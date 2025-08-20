@@ -98,9 +98,25 @@
   border: none;
   border-radius: 1.2rem;
   padding: 0.4rem 0.8rem;
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   background-color: #f2f2f2;
 }
+
+.chat-input-bar input::placeholder{
+  font-size: 0.55rem;
+}
+
+.chat-input-bar--readonly {
+  background-color: #FFFDF6; /* 요청한 색상 */
+  justify-content: center;
+}
+
+.chat-readonly-msg {
+  font-size: 0.65rem;
+  color: black;
+  white-space: nowrap;
+}
+
 
 .chat-send-btn {
   background: none;
@@ -149,3 +165,4 @@
   gap: 8px;
   margin-top: 12px;
 }
+

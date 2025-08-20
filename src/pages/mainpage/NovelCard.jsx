@@ -38,9 +38,9 @@ const NovelCard = ({ novel }) => {
         <button className="start-button" onClick={handleClick}>
           첫 화 보기
         </button>
-        <button className="like-button">
+        {/* <button className="like-button">
           <img src={heartImg} alt="좋아요" className="like-icon" />
-        </button>
+        </button> */}
       </div>
     </div>
   );

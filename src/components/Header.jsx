@@ -47,8 +47,13 @@ function Header({ onSearchResults }) {
       const keyId = filled.userName || filled.userNickname || "unknown";
       const colorKey = `avatarBgColor_${keyId}`;
       const colors = [
-        "#F6D6D6", "#FDE2B9", "#FFF1B6",
-        "#D7F3E3", "#D6E6FF", "#E7D6FF", "#FFDFEF",
+        "#F6D6D6",
+        "#FDE2B9",
+        "#FFF1B6",
+        "#D7F3E3",
+        "#D6E6FF",
+        "#E7D6FF",
+        "#FFDFEF",
       ];
       const saved = localStorage.getItem(colorKey);
       if (saved) {
@@ -71,7 +76,9 @@ function Header({ onSearchResults }) {
     syncAuth();
 
     // 로그인/로그아웃/토큰갱신 시 커스텀 이벤트로 동기화
-    const handleAuthChanged = () => { syncAuth(); };
+    const handleAuthChanged = () => {
+      syncAuth();
+    };
     window.addEventListener("authChanged", handleAuthChanged);
 
     // 다른 탭/창에서 토큰 변경 시 동기화
@@ -96,8 +103,10 @@ function Header({ onSearchResults }) {
   return (
     <header className="header">
       <div className="left-section">
-        <Link to="/" className="header-logo">Novel Bot</Link>
-        <Link to="/Cart" className="menu">장바구니</Link>
+        <Link to="/" className="header-logo">
+          Novel Bot
+        </Link>
+        {/* <Link to="/Cart" className="menu">장바구니</Link> */}
         <Link
           to="/"
           className="menu"
@@ -108,7 +117,6 @@ function Header({ onSearchResults }) {
         >
           웹소설
         </Link>
-
       </div>
 
       <div className="right-section">
@@ -123,7 +131,8 @@ function Header({ onSearchResults }) {
                 {displayInitial}
               </div>
               <span style={{ marginRight: 8 }}>
-                {nickname ? `${nickname}` : "사용자"}님 <br />환영합니다!
+                {nickname ? `${nickname}` : "사용자"}님 <br />
+                환영합니다!
               </span>
               <Link to="/mypage">
                 <img src={down} alt="down" style={{ width: 18, height: 18 }} />

@@ -1,9 +1,15 @@
 import "./NovelCard.css";
 import heartImg from "/src/assets/heart.png";
+import { useNavigate } from "react-router-dom";
 
 const NovelCard = ({ novel }) => {
   if (!novel) return <div>오류 발생</div>;
   const { novelId, title, author, description, genre, coverImageUrl } = novel;
+
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/viewer/${novelId}/1`);
+  };
   return (
     <div className="novel-info">
       {/*  소설 표지 이미지 */}
@@ -16,7 +22,7 @@ const NovelCard = ({ novel }) => {
           />
         )}
       </div>
-        
+
       {/*  제목 + 장르/작가 정보 */}
       <h2 className="novel-info-title">{title}</h2>
       <p className="novel-info-meta">
@@ -29,7 +35,9 @@ const NovelCard = ({ novel }) => {
       </div>
       {/* ▶ 첫 화 보기 +  좋아요 버튼 */}
       <div className="novel-info-buttons">
-        <button className="start-button">첫 화 보기</button>
+        <button className="start-button" onClick={handleClick}>
+          첫 화 보기
+        </button>
         <button className="like-button">
           <img src={heartImg} alt="좋아요" className="like-icon" />
         </button>

@@ -52,10 +52,10 @@ npm run dev     # 실행
     │  index.css
     │  main.jsx
     ├─api           # API 관련 함수
-    ├─assets        # 정적 자산 (이미지, 아이콘 등)
+    ├─assets        # 정적 자산: 이미지, 아이콘 등
     ├─components    # 공용 컴포넌트: 헤더, 검색바, 곰돌이, 채팅창
     └─pages
-        ├─cartpage  # 장바구니 페이지 (미사)
+        ├─cartpage  # 장바구니 페이지 (미사용)
         ├─loginpage # 로그인 페이지
         ├─mainpage  # 메인 페이지
         ├─mypage    # 마이 페이지

@@ -36,10 +36,73 @@ Novel Bot의 주요 장점은 아래와 같습니다.
 - HTTPS 로컬 개발 환경
 - ESLint 코드 품질 관리
 
-### 설치 방법
-```bash
-npm install     # 설치
-npm run dev     # 실행
+### 🚀설치 및 실행 방법🚀
+
+#### 1. 사전 준비물
+
+- Node.js **≥ 18** (권장: 20 LTS) / npm **≥ 9**
+- Git
+- 로컬 HTTPS 개발용 인증서  
+
+#### 2. 프로젝트 받기 & 의존성 설치
+```
+git clone https://github.com/novelbot/Frontend.git
+cd <YOUR_REPO_DIR>
+npm install   # 또는 npm ci
+```
+
+#### 3. 환경 변수(.env) 설정
+프로젝트 루트에 `.env`파일을 만들고 아래 예시를 채워 넣습니다.
+```
+# --- 백엔드 API / 웹소켓 엔드포인트 ---
+VITE_BASE_URL=https://api.novelbot.org
+```
+
+#### 4. 로컬 HTTPS 설정
+- macOS
+```
+brew install mkcert nss
+mkcert -install
+mkcert localhost 127.0.0.1 ::1
+```
+- Windows (Chocolatey)
+```
+choco install mkcert
+mkcert -install
+mkcert localhost 127.0.0.1 ::1
+```
+생성된 키/인증서를 프로젝트 루트에 두고(또는 `vite.config.js` 경로에 맞춤), 파일명을 `localhost+2-key.pem` / `localhost+2.pem` 으로 맞추거나 Vite 설정에서 경로를 수정하세요.
+
+#### 5. Vite 개발 서버 설정 예시
+`vite.config.js`가 다음과 유사한지 확인하세요.
+```
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ESM 환경에서 __dirname 구현
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, "localhost+2-key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "localhost+2.pem")),
+    },
+  },
+  plugins: [react()],
+  define: {
+    global: "window", // Node의 global을 브라우저 window로 매핑
+  },
+});
+```
+
+#### 6. 실행
+```
+npm run dev      # 개발 서버 실행 (기본: https://localhost:5173)
 ```
 
 # 프로젝트 구조

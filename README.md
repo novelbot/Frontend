@@ -54,7 +54,6 @@ npm install   # 또는 npm ci
 #### 3. 환경 변수(.env) 설정
 프로젝트 루트에 `.env`파일을 만들고 아래 예시를 채워 넣습니다.
 ```
-# --- 백엔드 API / 웹소켓 엔드포인트 ---
 VITE_BASE_URL=https://api.novelbot.org
 ```
 
